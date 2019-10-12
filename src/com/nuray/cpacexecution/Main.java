@@ -45,7 +45,7 @@ public class Main {
 //        System.out.println("Number of trues: "+nTrues);
 //        System.out.println("Number of falses: "+nFalses);
 
-        int randNum= (int) Math.round(Math.random());
+        int randNum= (int) Math.round(Math.random()); 
         System.out.println(randNum);
         if(randNum==1)
         {
