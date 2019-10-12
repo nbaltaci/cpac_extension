@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="WSO2APICall">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../WSO2APICall/classes/artifacts/WSO2APICall_jar/WSO2APICall.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
