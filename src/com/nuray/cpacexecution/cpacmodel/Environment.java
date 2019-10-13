@@ -20,8 +20,7 @@ public class Environment {
      *
      * @param environmentID: This basically represents the domain.
      */
-    public Environment(String environmentID)
-    {
+    public Environment(String environmentID) throws Exception {
         this.environmentID=environmentID;
         environmentId++;
 

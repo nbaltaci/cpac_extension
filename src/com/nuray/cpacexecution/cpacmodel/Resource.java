@@ -25,8 +25,7 @@ public class Resource {
      * @param type: This corresponds to the type of resource. Valid options are: "human", "physical", and "cyber".
      *      *           (see CPACSpecifications.java)
      */
-    public Resource(String resourceID, String type)
-    {
+    public Resource(String resourceID, String type) throws Exception {
         if(!CPACSpecifications.elementTypes.contains(type))
         {
             throw new IllegalArgumentException("Type should be one of the values specified in" +
@@ -53,8 +52,14 @@ public class Resource {
     {
         return resourceID;
     }
+
     public int getResourceId() {
         return resourceId;
+    }
+
+    public String getType()
+    {
+        return type;
     }
 
     public Attribute getResourceName()
@@ -69,5 +74,10 @@ public class Resource {
     public void setResourceName(Attribute resourceName)
     {
         this.resourceName = resourceName;
+    }
+
+    public void addResourceAttribute(Attribute attribute)
+    {
+        resourceAttributes.add(attribute);
     }
 }

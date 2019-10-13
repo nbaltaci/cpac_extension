@@ -1,43 +1,39 @@
 package com.nuray.cpacexecution.enforcementfunctions;
 
+import com.nuray.cpacexecution.cpacmodel.Resource;
+
+import java.util.LinkedList;
 import java.util.List;
 
 public class SODPolicy {
-    private List<Permission> Perm;
-    private int k; // this is # agents needed for permissions in Perm to fulfill a task. (Remember: sod=< Perm,k >)
-    private double riskOfSoDPolicy;
+    private int sodPolicyId;
+    private List<SODPolicyRule> sodPolicyRules;
 
-    /**
-     *
-     * @param Perm
-     * @param k: this is # agents needed for permissions in Perm to fulfill a task. (Remember: sod=< Perm,k >)
-     */
-    public SODPolicy(List<Permission> Perm, int k, double riskOfSoDPolicy)
+    public SODPolicy()
     {
-        this.Perm=Perm;
-        this.k=k;
-        this.riskOfSoDPolicy=riskOfSoDPolicy;
+        sodPolicyRules=new LinkedList<>();
+        sodPolicyId++;
     }
 
-//    @Override
-//    public boolean equals(Object obj)
-//    {
-//        SODPolicy another=(SODPolicy) obj;
-//        return another.getSodPolicyId()==((SODPolicy) obj).getSodPolicyId();
-//    }
-
-    public List<Permission> getPerm()
+    @Override
+    public boolean equals(Object obj)
     {
-        return Perm;
+        SODPolicy other = (SODPolicy) obj;
+        return other.sodPolicyId==this.sodPolicyId;
     }
 
-    public int getK()
+    public void addSoDPolicyRule(SODPolicyRule sodPolicyRule)
     {
-        return k;
+        sodPolicyRules.add(sodPolicyRule);
     }
 
-    public double getRiskOfSoDPolicy()
+    public List<SODPolicyRule> getSodPolicyRules()
     {
-        return riskOfSoDPolicy;
+        return sodPolicyRules;
+    }
+
+    public void setSodPolicyRules(List<SODPolicyRule> sodPolicyRules)
+    {
+        this.sodPolicyRules = sodPolicyRules;
     }
 }

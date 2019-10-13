@@ -50,6 +50,11 @@ public class PolicyRule {
             throw new IllegalArgumentException("Operational mode should be one of the values specified in" +
                     " \"CPACSpecifications.java\" file, i.e. active, passive, autonomous, or emergency"+ operationalMode);
         }
+        if(!EnforcementSpecifications.policyRuleEffects.contains(ruleEffect))
+        {
+            throw new IllegalArgumentException("Rule effect should be one of the values specified in" +
+                    " \"EnforcementSpecifications.java\" file, i.e. permit or deny"+ ruleEffect);
+        }
         validateAttributeMap(resourceAttributeMap);
         validateAttributeMap(agentAttributeMap);
         validateAttributeMap(actionAttributeMap);
@@ -71,69 +76,76 @@ public class PolicyRule {
      */
     private void validateAttributeMap(Map<String, List<Map<Attribute,String>>> attributeToMatchFunctionMap)
     {
-        Set<String> subjectGroups = attributeToMatchFunctionMap.keySet(); //<Subject></Subject> groups in XACML
-
-        Iterator<String> iterator = subjectGroups.iterator();
-
-        while (iterator.hasNext())
+        if(attributeToMatchFunctionMap!=null)
         {
-            String nextSubjectGroup = iterator.next();
-            List<Map<Attribute, String>> attributeMatchingFunctionMap = attributeToMatchFunctionMap.get(nextSubjectGroup);
+            Set<String> subjectGroups = attributeToMatchFunctionMap.keySet(); //<Subject></Subject> groups in an XACML file
 
-            for (Map<Attribute,String> map:attributeMatchingFunctionMap)
+            Iterator<String> iterator = subjectGroups.iterator();
+
+            while (iterator.hasNext())
             {
-                Map.Entry<Attribute, String> attributeMatchingFunctionEntry = map.entrySet().iterator().next();
-                Attribute attribute = attributeMatchingFunctionEntry.getKey();
-                String attributeType = attribute.getAttributeType();
+                String nextSubjectGroup = iterator.next();
+                List<Map<Attribute, String>> attributeMatchingFunctionMap = attributeToMatchFunctionMap.get(nextSubjectGroup);
 
-                String attributeMatchingFunction = attributeMatchingFunctionEntry.getValue();
-
-                if(attributeType.equalsIgnoreCase("categorical"))
+                for (Map<Attribute,String> map:attributeMatchingFunctionMap)
                 {
-                    if(!XACMLSpecifications.STRING_MATCH_FUNCTIONS.contains(attributeMatchingFunction))
+//                Map.Entry<Attribute, String> attributeMatchingFunctionEntry = map.entrySet().iterator().next();
+//                Attribute attribute = attributeMatchingFunctionEntry.getKey();
+//                String attributeType = attribute.getAttributeType();
+
+                    Attribute attribute = map.keySet().iterator().next();
+                    String attributeType =attribute.getAttributeType();
+                    String attributeMatchingFunction = map.get(attribute);
+
+//                String attributeMatchingFunction = attributeMatchingFunctionEntry.getValue();
+
+                    if(attributeType.equalsIgnoreCase("categorical"))
+                    {
+                        if(!XACMLSpecifications.STRING_MATCH_FUNCTIONS.contains(attributeMatchingFunction))
+                        {
+                            final StringBuilder stringBuilder=new StringBuilder();
+                            XACMLSpecifications.STRING_MATCH_FUNCTIONS.forEach(l -> stringBuilder.append(l+"\n "));
+
+                            String possibleStringMatchFunctions=stringBuilder.toString();
+
+                            throw new IllegalArgumentException("String matching function should be one of the values specified in" +
+                                    " \"XACMLSpecifications.java\" file, i.e. one of the followings: \n"+ possibleStringMatchFunctions);
+                        }
+                    }
+                    else if (attributeType.equalsIgnoreCase("numerical"))
+                    {
+                        if(!XACMLSpecifications.DOUBLE_MATCH_FUNCTIONS.contains(attributeMatchingFunction))
+                        {
+                            final StringBuilder stringBuilder=new StringBuilder();
+                            XACMLSpecifications.DOUBLE_MATCH_FUNCTIONS.forEach(l -> stringBuilder.append(l+"\n "));
+
+                            String possibleDoubleMatchFunctions=stringBuilder.toString();
+
+                            throw new IllegalArgumentException("Double matching function should be one of the values specified in" +
+                                    " \"XACMLSpecifications.java\" file, i.e. one of the followings: \n"+ possibleDoubleMatchFunctions);
+                        }
+                    }
+                    else if (attributeType.equalsIgnoreCase("date"))
                     {
                         final StringBuilder stringBuilder=new StringBuilder();
-                        XACMLSpecifications.STRING_MATCH_FUNCTIONS.forEach(l -> stringBuilder.append(l+"\n "));
+                        XACMLSpecifications.DATE_MATCH_FUNCTIONS.forEach(l -> stringBuilder.append(l+"\n "));
 
-                        String possibleStringMatchFunctions=stringBuilder.toString();
+                        String possibleDateMatchFunctions=stringBuilder.toString();
 
-                        throw new IllegalArgumentException("String matching function should be one of the values specified in" +
-                                " \"XACMLSpecifications.java\" file, i.e. one of the followings: \n"+ possibleStringMatchFunctions);
+                        throw new IllegalArgumentException("Date matching function should be one of the values specified in" +
+                                " \"XACMLSpecifications.java\" file, i.e. one of the followings: \n"+ possibleDateMatchFunctions);
                     }
-                }
-                else if (attributeType.equalsIgnoreCase("numerical"))
-                {
-                    if(!XACMLSpecifications.DOUBLE_MATCH_FUNCTIONS.contains(attributeMatchingFunction))
+                    else if (attributeType.equalsIgnoreCase("time"))
                     {
                         final StringBuilder stringBuilder=new StringBuilder();
-                        XACMLSpecifications.DOUBLE_MATCH_FUNCTIONS.forEach(l -> stringBuilder.append(l+"\n "));
+                        XACMLSpecifications.TIME_MATCH_FUNCTIONS.forEach(l -> stringBuilder.append(l+"\n "));
 
-                        String possibleDoubleMatchFunctions=stringBuilder.toString();
+                        String possibleTimeMatchFunctions=stringBuilder.toString();
 
-                        throw new IllegalArgumentException("Double matching function should be one of the values specified in" +
-                                " \"XACMLSpecifications.java\" file, i.e. one of the followings: \n"+ possibleDoubleMatchFunctions);
+                        throw new IllegalArgumentException("Time matching function should be one of the values specified in" +
+                                " \"XACMLSpecifications.java\" file, i.e. one of the followings: \n"+ possibleTimeMatchFunctions);
+
                     }
-                }
-                else if (attributeType.equalsIgnoreCase("date"))
-                {
-                    final StringBuilder stringBuilder=new StringBuilder();
-                    XACMLSpecifications.DATE_MATCH_FUNCTIONS.forEach(l -> stringBuilder.append(l+"\n "));
-
-                    String possibleDateMatchFunctions=stringBuilder.toString();
-
-                    throw new IllegalArgumentException("Date matching function should be one of the values specified in" +
-                            " \"XACMLSpecifications.java\" file, i.e. one of the followings: \n"+ possibleDateMatchFunctions);
-                }
-                else if (attributeType.equalsIgnoreCase("time"))
-                {
-                    final StringBuilder stringBuilder=new StringBuilder();
-                    XACMLSpecifications.TIME_MATCH_FUNCTIONS.forEach(l -> stringBuilder.append(l+"\n "));
-
-                    String possibleTimeMatchFunctions=stringBuilder.toString();
-
-                    throw new IllegalArgumentException("Time matching function should be one of the values specified in" +
-                            " \"XACMLSpecifications.java\" file, i.e. one of the followings: \n"+ possibleTimeMatchFunctions);
-
                 }
             }
         }

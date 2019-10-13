@@ -29,8 +29,7 @@ public class Agent {
      * @param type: This corresponds to the type of agent. Valid options are: "human", "physical", and "cyber".
      *           (see CPACSpecifications.java)
      */
-    public Agent(String agentID, String type)
-    {
+    public Agent(String agentID, String type) throws Exception {
         if(!CPACSpecifications.elementTypes.contains(type))
         {
             throw new IllegalArgumentException("Type should be one of the values specified in" +
@@ -43,7 +42,7 @@ public class Agent {
         userName=new Attribute("agentID",null,"categorical");
         email=new Attribute("email",null,"categorical");
         role=new Attribute("role",null,"categorical");
-        age=new Attribute("age",new AttributeRanges(15.0,85.00),"numeric");
+        age=new Attribute("age",new AttributeRange(15.0,85.00),"numeric");
 
         userName.setAttributeValueCategorical(agentID);
 

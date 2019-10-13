@@ -3,7 +3,7 @@ package com.nuray.gagm.experiment;
 
 import com.nuray.cpacexecution.cpacmodel.Action;
 import com.nuray.cpacexecution.cpacmodel.Attribute;
-import com.nuray.cpacexecution.cpacmodel.AttributeRanges;
+import com.nuray.cpacexecution.cpacmodel.AttributeRange;
 import com.nuray.cpacexecution.enforcementfunctions.VirtualAccessRequest;
 import com.nuray.cpacexecution.storage.ActionBase;
 
@@ -85,7 +85,7 @@ public class Random {
         Attribute userName=new Attribute("agentID",null,"categorical");
         Attribute email=new Attribute("email",null,"categorical");
         Attribute role=new Attribute("role",null,"categorical");
-        Attribute age=new Attribute("age",new AttributeRanges(15.0,85.00),"numeric");
+        Attribute age=new Attribute("age",new AttributeRange(15.0,85.00),"numeric");
 
         agentAttList.addAll(Arrays.asList(new Attribute[]{userName,email,role,age}));
 //        userName.setAttributeValueCategorical("agent");
@@ -199,8 +199,7 @@ public class Random {
         return actionToAttMap;
     }
 
-    private List<Attribute> generateAttsForVar(int nAttributes)
-    {
+    private List<Attribute> generateAttsForVar(int nAttributes) throws Exception {
         // generate resource attributes
         List<Attribute> attList=new LinkedList<Attribute>();
 

@@ -31,9 +31,7 @@ public class ExecutionOfCPAC {
 //    RemoteUserStoreManagerServiceStub RUSMSadminStub;
 
 
-    public ExecutionOfCPAC(List<Policy> policyList,
-                           List<SODPolicy> SODPolicyList,
-                           ResourceBase resourceBase,
+    public ExecutionOfCPAC(ResourceBase resourceBase,
                            ActionBase actionBase,
                            AgentBase agentBase,
                            PolicyBase policyBase,
@@ -45,21 +43,16 @@ public class ExecutionOfCPAC {
         this.policyBase=policyBase;
         this.sodBase=sodBase;
 
-        //  publish AC policies
-        for (Policy policy:policyList)
-        {
-            policyBase.addPolicy(policy);
-        }
+        //  publish AC policies to PAP
+        List<Policy> policyList=policyBase.getPolicyList();
         authorizationDecision=new AuthorizationDecision();
         EPASadminStub = authorizationDecision.getEPASadminStub();
-
         publishPolicies(policyList);
 
         //publish SOD policies to PAP here...
-        for (SODPolicy sod:SODPolicyList)
-        {
-            sodBase.addSODPolicy(sod);
-        }
+        List<SODPolicy> sodPolicyList = sodBase.getSODPolicyList();
+        publishSODPolicies(sodPolicyList);
+
     }
 
     /**
@@ -139,11 +132,11 @@ public class ExecutionOfCPAC {
             Permission perm_var=var_v_cur.extractPermission(resourceBase);
 
             //  line 9: check applicable sod policies to perm_var
-            List<SODPolicy> applicableSoDs=checkApplicableSoDPolicies(perm_var);
+            List<SODPolicyRule> applicableSoDs=checkApplicableSoDPolicies(perm_var);
 
             if(!applicableSoDs.isEmpty()) // line 10
             {
-                for (SODPolicy sod:applicableSoDs)  //  line 11
+                for (SODPolicyRule sod:applicableSoDs)  //  line 11
                 {
                     for (Agent agent:agentList_v_cur)   //  line 12
                     {
@@ -188,11 +181,11 @@ public class ExecutionOfCPAC {
             agentList_v_cur.add(agent);
 
             //  line 23: check applicable sod policies to perm_iar
-            List<SODPolicy> applicableSoDs=checkApplicableSoDPolicies(perm_iar);
+            List<SODPolicyRule> applicableSoDs=checkApplicableSoDPolicies(perm_iar);
 
             if(!applicableSoDs.isEmpty()) // line 24
             {
-                for (SODPolicy sod:applicableSoDs)  //  line 25
+                for (SODPolicyRule sod:applicableSoDs)  //  line 25
                 {
                     List<Permission> validPerms=computeValidSetForAgent(agent);
                     validPerms.add(perm_iar);
@@ -329,21 +322,25 @@ public class ExecutionOfCPAC {
         return permissionsApplicableToAgent;
     }
 
-    private List<SODPolicy> checkApplicableSoDPolicies(Permission permission)
+    private List<SODPolicyRule> checkApplicableSoDPolicies(Permission permission)
     {
-        List<SODPolicy> applicableSODPolicies=new ArrayList<>();
-        List<SODPolicy> sodPolicies=sodBase.getSODPolicyList();
+        List<SODPolicyRule> applicableSODPolicyRules=new ArrayList<>();
+        List<SODPolicy> sodPolicyList = sodBase.getSODPolicyList();
 
-        for (SODPolicy sod:sodPolicies)
+        for (SODPolicy sodPolicy:sodPolicyList)
         {
-            List<Permission> Perm=sod.getPerm();
-            if (Perm.contains(permission))
+            List<SODPolicyRule> sodPolicyRules = sodPolicy.getSodPolicyRules();
+            for (SODPolicyRule rule:sodPolicyRules)
             {
-                applicableSODPolicies.add(sod);
+                List<Permission> Perm=rule.getPerm();
+                if (Perm.contains(permission))
+                {
+                    applicableSODPolicyRules.add(rule);
+                }
             }
         }
 
-        return applicableSODPolicies;
+        return applicableSODPolicyRules;
     }
 
     private List<Permission> intersectPermissionLists(List<Permission> permissionList1, List<Permission> permissionList2)
@@ -389,6 +386,12 @@ public class ExecutionOfCPAC {
 
             EPASadminStub.addPolicy(policyToPublish);
         }
+    }
+
+    private void publishSODPolicies(List<SODPolicy> sodPolicyList)
+    {
+        // TODO: to be implemented later if needed (for publishing SOD policies to WSO2 identity server, for now it is not needed)
+
     }
 
 }

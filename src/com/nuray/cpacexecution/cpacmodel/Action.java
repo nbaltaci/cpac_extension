@@ -25,8 +25,7 @@ public class Action {
      * @param type: This corresponds to the type of action. Valid options are: "object-oriented", "cyber-physical".
      *           (see CPACSpecifications.java)
      */
-    public Action(String actionID, String type)
-    {
+    public Action(String actionID, String type) throws Exception {
         if(!CPACSpecifications.actionTypes.contains(type))
         {
             throw new IllegalArgumentException("Type should be one of the values specified in" +

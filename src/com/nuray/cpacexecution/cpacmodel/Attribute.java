@@ -11,7 +11,7 @@ public class Attribute {
     private String dataType;
 
     private String attributeName;
-    private AttributeRanges attributeRange; // this is only for numeric attributes
+    private AttributeRange attributeRange; // this is only for numeric attributes
     private double attributeValueNumeric;
     private String attributeValueCategorical;
     private Date attributeValDate;
@@ -28,7 +28,7 @@ public class Attribute {
      *            Date: a date attribute should be in the following format: dd/mm/yyyy
      *            Time: a time attribute should be in the following format: HH:MM:SS
      */
-    public Attribute(String attributeName, AttributeRanges attributeRange, String attributeType)
+    public Attribute(String attributeName, AttributeRange attributeRange, String attributeType)
     {
         if(!CPACSpecifications.attributeTypes.contains(attributeType))
         {
@@ -77,7 +77,7 @@ public class Attribute {
         return this.attributeName;
     }
 
-    public AttributeRanges getAttributeRange()
+    public AttributeRange getAttributeRange()
     {
         return attributeRange;
     }
@@ -128,10 +128,22 @@ public class Attribute {
         }
     }
 
-    public void setAttributeValueCategorical(String attributeValue)
+    public void setAttributeValueCategorical(String attributeValue) throws Exception
     {
-        this.attributeValueCategorical=attributeValue;
-        valueIsSet=true;
+        if(attributeRange!=null) // => note that attribute range may be null for categorical attributes
+        {
+            if(!attributeRange.getPossibleValues().contains(attributeValue))
+            {
+                throw new Exception("Attribute value is out of the range.");
+            }
+            this.attributeValueCategorical=attributeValue;
+            valueIsSet=true;
+        }
+        else
+        {
+            this.attributeValueCategorical=attributeValue;
+            valueIsSet=true;
+        }
     }
 
     public void setAttributeValDate(String attributeValDate) throws ParseException {

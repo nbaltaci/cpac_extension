@@ -1,6 +1,7 @@
 package com.nuray.cpacexecution.storage;
 
 import com.nuray.cpacexecution.enforcementfunctions.SODPolicy;
+import com.nuray.cpacexecution.enforcementfunctions.SODPolicyRule;
 
 import java.util.ArrayList;
 import java.util.List;
