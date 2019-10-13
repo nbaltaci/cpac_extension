@@ -1,34 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dd8c35c9-09c2-4ade-a2a8-804ce39981d8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/EnforcementSpecifications.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/SODPolicyRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Action.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Action.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Agent.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Agent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Attribute.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Attribute.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/AttributeRanges.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Environment.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Environment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Resource.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Resource.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/PolicyRule.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/PolicyRule.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/experiment/Random.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/experiment/Random.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/ExecutionOfCPAC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/ExecutionOfCPAC.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Action.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Action.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Agent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Attribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Attribute.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/AttributeRanges.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/AttributeRange.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Environment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Resource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/PolicyRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/PolicyRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/SODPolicy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/SODPolicy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/storage/SODBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/storage/SODBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/gagm/experiment/Random.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/gagm/experiment/Random.java" afterDir="false" />
-    </list>
+    <list default="true" id="dd8c35c9-09c2-4ade-a2a8-804ce39981d8" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -283,7 +256,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1570937602657" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1570942584039" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
