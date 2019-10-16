@@ -45,7 +45,7 @@ public class Resource {
     public boolean equals(Object obj)
     {
         Resource other = (Resource) obj;
-        return other.resourceId==this.resourceId;
+        return other.resourceID.equalsIgnoreCase(this.resourceID);
     }
 
     public String getResourceID()

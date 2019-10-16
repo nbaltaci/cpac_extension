@@ -14,6 +14,14 @@ public class Permission {
 
     public Permission(Resource resource, List<Action> actionList)
     {
+        if(resource==null)
+        {
+            throw new NullPointerException("resource cannot be null in a permission!");
+        }
+        if(actionList.isEmpty())
+        {
+            throw new NullPointerException("action list cannot be empty in a permission!");
+        }
         this.resource=resource;
         this.actionList=actionList;
         permissionId++;
@@ -23,7 +31,27 @@ public class Permission {
     public boolean equals(Object obj)
     {
         Permission other = (Permission) obj;
-        return other.permissionId==this.permissionId;
+        Resource resource = this.resource;
+        Resource otherResource = other.resource;
+        List<Action> actionList=this.actionList;
+        List<Action> otherActionList=other.actionList;
+        boolean isEqualActionList=true;
+        if(actionList.size()!=otherActionList.size())
+        {
+            isEqualActionList=false;
+        }
+        else
+        {
+            for (Action action:actionList)
+            {
+                if(!otherActionList.contains(action))
+                {
+                    isEqualActionList=false;
+                }
+            }
+        }
+
+        return isEqualActionList&&(resource.equals(otherResource));
     }
 
     public int getPermissionId() {

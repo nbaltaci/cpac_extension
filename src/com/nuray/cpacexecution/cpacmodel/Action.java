@@ -45,7 +45,7 @@ public class Action {
     public boolean equals(Object obj)
     {
         Action other = (Action) obj;
-        return other.actionId==this.actionId;
+        return other.actionID.equalsIgnoreCase(this.actionID);
     }
 
     public String getActionID()

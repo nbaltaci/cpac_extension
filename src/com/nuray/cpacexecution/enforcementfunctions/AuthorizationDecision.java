@@ -1,7 +1,7 @@
 package com.nuray.cpacexecution.enforcementfunctions;
 
 
-import com.nuray.wso2.*;
+import com.nuray.wso2.Test;
 import org.apache.axis2.client.ServiceClient;
 import org.wso2.carbon.identity.entitlement.stub.*;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
@@ -36,11 +36,6 @@ public class AuthorizationDecision {
    private void connectServerForAuth()
    {
        Test test=new Test();
-
-       /**
-        * trust store path.  this must contain server's  certificate or Server's CA chain
-        */
-
        test.getServerCert();
 
        /*create stubs and service clients*/
@@ -70,4 +65,5 @@ public class AuthorizationDecision {
     {
         return EPASadminStub;
     }
+
 }

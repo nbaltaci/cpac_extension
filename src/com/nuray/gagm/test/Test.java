@@ -127,34 +127,9 @@ public class Test {
             }
 
         }
-
-
-//                Iterator<Vertex> varList_v_iterator = varList_v_Map.keySet().iterator();
-//
-//                while (varList_v_iterator.hasNext())
-//                {
-//                    Vertex finalState = varList_v_iterator.next();
-//                    Queue<Map<Edge, VirtualAccessRequest>> varList_f = varList_v.get(finalState);
-//
-//                    System.out.println("\t \t From vertex "+sourceState.getVertexID()+" to vertex "+finalState.getVertexID()+"\n");
-//
-//                    while (!varList_f.isEmpty())
-//                    {
-//                        Map<Edge, VirtualAccessRequest> edgeVirtualAccessRequestMap = varList_f.poll();
-//                        Edge edge = edgeVirtualAccessRequestMap.keySet().iterator().next();
-//                        VirtualAccessRequest var = edgeVirtualAccessRequestMap.get(edge);
-//                        int requestId = var.getRequestId();
-//                        System.out.println("\t \t \t v"+edge.getSourceVertex().getVertexID()+
-//                                " --> v"+edge.getTargetVertex().getVertexID()+
-//                                ": var"+requestId);
-//                    }
-//                }
-
-
-
     }
 
-    private static Graph initializeGraph(String graphType,int testCaseNumber, int[] finalStates) throws Exception {
+    public static Graph initializeGraph(String graphType,int testCaseNumber, int[] finalStates) throws Exception {
         adjacencyMatrix = ReadAdjacency.read("src/adjacent matrix for test case-"+testCaseNumber+".txt");
         String[][] edgeTypeMatrix=null;
         VirtualAccessRequest[][] varMatrix=null;

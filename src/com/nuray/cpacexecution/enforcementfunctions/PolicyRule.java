@@ -232,15 +232,16 @@ public class PolicyRule {
                 {
                     String resourceIDVal = resourceAtt.getAttributeValueCategorical();
                     resource = resourceBase.getResourceWithResourceID(resourceIDVal);
+                    if(!resourceList.contains(resource))
+                    {
+                        resourceList.add(resource);
+                    }
+
+                    Permission permission=new Permission(resource,actionList);
+                    permissionList.add(permission);
                 }
 
-                if(!resourceList.contains(resource))
-                {
-                    resourceList.add(resource);
-                }
 
-                Permission permission=new Permission(resource,actionList);
-                permissionList.add(permission);
             }
 
         }

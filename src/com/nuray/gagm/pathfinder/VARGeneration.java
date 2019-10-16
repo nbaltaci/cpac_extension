@@ -63,8 +63,7 @@ public class VARGeneration {
 
             for (Vertex vertex:vertices)
             {
-//                previous=findOptimum();
-                varList_v = findVarList(vertex, finalStateSet, previous);
+                varList_v = findVarList(vertex, finalStateSet);
                 Map<Vertex,Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>>> map=new HashMap<>();
                 map.put(vertex,varList_v);
                 varSet_m.add(map);
@@ -79,7 +78,7 @@ public class VARGeneration {
         return varSet;
     }
 
-    public Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>> findVarList(Vertex source, Set<Vertex> finalStateSet, Vertex[] previous)
+    public Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>> findVarList(Vertex source, Set<Vertex> finalStateSet)
     {
         for (Vertex finalState:finalStateSet)
         {

@@ -2,6 +2,7 @@ package com.nuray.cpacexecution;
 
 
 
+import com.nuray.cpacexecution.cpacmodel.Action;
 import com.nuray.cpacexecution.cpacmodel.Agent;
 import com.nuray.cpacexecution.cpacmodel.Attribute;
 import com.nuray.cpacexecution.enforcementfunctions.*;
@@ -63,7 +64,7 @@ public class ExecutionOfCPAC {
      * @param v_cur
      */
     public List<Agent> executeCPAC(InitialAccessRequest iar,
-                                   Map<Edge, VirtualAccessRequest> varList_v_cur,
+                                   Queue<Map<Vertex,Queue<Map<Edge, VirtualAccessRequest>>>> varList_v_cur,
                                    String m_cur, Vertex v_cur) throws Exception {
 
         //  line 1: initialization
@@ -82,22 +83,39 @@ public class ExecutionOfCPAC {
             VirtualAccessRequest var_v_cur = null;
             VirtualAccessRequest var_v_next = null;
 
-            Iterator<Edge> iterator = varList_v_cur.keySet().iterator();
+            Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>> vertexQueueMap = varList_v_cur.poll();
 
-            Edge edge1 = iterator.next();
-            Vertex sourceVertex = edge1.getSourceVertex();
+            Vertex finalState = vertexQueueMap.keySet().iterator().next();
+            Queue<Map<Edge, VirtualAccessRequest>> varList_f = vertexQueueMap.get(finalState);
 
-            if(sourceVertex==v_cur)
+            Map<Edge, VirtualAccessRequest> edgeVarMap_v_cur = varList_f.poll();
+
+            Edge edgeFrom_v_cur = edgeVarMap_v_cur.keySet().iterator().next();
+            Vertex sourceVertex=edgeFrom_v_cur.getSourceVertex();
+
+//            Iterator<Edge> iterator = varList_v_cur.keySet().iterator();
+//
+//            Edge edge1 = iterator.next();
+//            Vertex sourceVertex = edge1.getSourceVertex();
+
+            if(sourceVertex.equals(v_cur))
             {
-                v_next=edge1.getTargetVertex();
-                var_v_cur = varList_v_cur.get(edge1);
+                v_next=edgeFrom_v_cur.getTargetVertex();
+                var_v_cur =edgeFrom_v_cur.getVar();
+//                var_v_cur = varList_v_cur.get(edge1);
+//
+//                Edge edgeFrom_v_next = edgeVarMap_v_cur.keySet().iterator().next();
+//                sourceVertex=edgeFrom_v_next.getSourceVertex();
 
-                Edge edge2 = iterator.next();
-                sourceVertex=edge2.getSourceVertex();
+                Map<Edge, VirtualAccessRequest> edgeVarMap_v_next = varList_f.poll();
 
-                if(sourceVertex==v_next)
+                Edge edgeFrom_v_next = edgeVarMap_v_next.keySet().iterator().next();
+                sourceVertex=edgeFrom_v_next.getSourceVertex();
+
+                if(sourceVertex.equals(v_next))
                 {
-                    var_v_next = varList_v_cur.get(edge2);
+                    var_v_next=edgeFrom_v_next.getVar();
+//                    var_v_next = varList_v_cur.get(edge2);
                 }
                 else
                 {
@@ -115,7 +133,7 @@ public class ExecutionOfCPAC {
             List<Attribute> var_v_nextAgentAttributes = var_v_next.getAgentAttributes();
 
             agentList_v_cur= queryEligibleAgents(var_v_curAgentAttributes, agentList_v_cur);
-            agentList_v_next=queryEligibleAgents(var_v_nextAgentAttributes,agentList_v_next);
+            agentList_v_next= queryEligibleAgents(var_v_nextAgentAttributes,agentList_v_next);
 
             // line 6
 
@@ -333,10 +351,24 @@ public class ExecutionOfCPAC {
             for (SODPolicyRule rule:sodPolicyRules)
             {
                 List<Permission> Perm=rule.getPerm();
-                if (Perm.contains(permission))
+                for (Permission p:Perm)
                 {
-                    applicableSODPolicyRules.add(rule);
+                    if(p.getResource().equals(permission.getResource()))
+                    {
+                        List<Action> actionListInRequestedPerm = permission.getActionList();
+                        for (Action action:actionListInRequestedPerm)
+                        {
+                            if(p.getActionList().contains(action))
+                            {
+                                applicableSODPolicyRules.add(rule);
+                            }
+                        }
+                    }
                 }
+//                if (Perm.contains(permission))
+//                {
+//                    applicableSODPolicyRules.add(rule);
+//                }
             }
         }
 
@@ -347,10 +379,26 @@ public class ExecutionOfCPAC {
     {
         List<Permission> intersection = new LinkedList<>();
 
-        for(Permission perm : permissionList1) {
-            if(permissionList2.contains(perm)) {
-                intersection.add(perm);
+        for(Permission perm1 : permissionList1)
+        {
+            for (Permission perm2:permissionList2)
+            {
+                if(perm1.getResource().equals(perm2.getResource()))
+                {
+                    List<Action> perm1ActionList = perm1.getActionList();
+                    for (Action action:perm1ActionList)
+                    {
+                        if(perm2.getActionList().contains(action))
+                        {
+                            intersection.add(perm1);
+                        }
+                    }
+                }
             }
+
+//            if(permissionList2.contains(perm)) {
+//                intersection.add(perm);
+//            }
         }
         return intersection;
     }
@@ -376,16 +424,16 @@ public class ExecutionOfCPAC {
 
     private void publishPolicies(List<Policy> policyList) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
         //publish these policies to the PAP
-        for (Policy policy:policyList)
-        {
-            PolicyDTO policyToPublish = new PolicyDTO();
-            policyToPublish.setPolicyId(policy.getPolicyID());
-            policyToPublish.setPolicy(policy.getPolicyContentXACML());
-            policyToPublish.setActive(true);
-            policyToPublish.setPromote(true);
-
-            EPASadminStub.addPolicy(policyToPublish);
-        }
+//        for (Policy policy:policyList)
+//        {
+//            PolicyDTO policyToPublish = new PolicyDTO();
+//            policyToPublish.setPolicyId(policy.getPolicyID());
+//            policyToPublish.setPolicy(policy.getPolicyContentXACML());
+//            policyToPublish.setActive(true);
+//            policyToPublish.setPromote(true);
+//
+//            EPASadminStub.addPolicy(policyToPublish);
+//        }
     }
 
     private void publishSODPolicies(List<SODPolicy> sodPolicyList)

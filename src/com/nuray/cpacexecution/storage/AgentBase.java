@@ -5,6 +5,7 @@ import com.nuray.cpacexecution.cpacmodel.Attribute;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class AgentBase {
@@ -51,8 +52,7 @@ public class AgentBase {
 
     public List<Agent> getAgentsWithAttributeValue(Attribute attribute) throws Exception {
 
-        List<Agent> agentList=new ArrayList<>();
-
+        List<Agent> result=new LinkedList<>();
         Iterator<Agent> agentIterator = agentList.iterator();
 
         while (agentIterator.hasNext())
@@ -65,24 +65,26 @@ public class AgentBase {
             {
                 int index = agentAttributes.indexOf(attribute);
                 Attribute agentAttribute = agentAttributes.get(index);
-                if(agentAttribute.getAttributeType().equalsIgnoreCase("categorical"))
+                if(agentAttribute.isValueSet())
                 {
-                    if(agentAttribute.getAttributeValueCategorical().equalsIgnoreCase(attribute.getAttributeValueCategorical()))
+                    if(agentAttribute.getAttributeType().equalsIgnoreCase("categorical"))
                     {
-                        agentList.add(agent);
+                        if(agentAttribute.getAttributeValueCategorical().equalsIgnoreCase(attribute.getAttributeValueCategorical()))
+                        {
+                            result.add(agent);
+                        }
+                    }
+                    if(agentAttribute.getAttributeType().equalsIgnoreCase("numerical"))
+                    {
+                        if(agentAttribute.getAttributeValueNumeric()==attribute.getAttributeValueNumeric())
+                        {
+                            result.add(agent);
+                        }
                     }
                 }
-                if(agentAttribute.getAttributeType().equalsIgnoreCase("numerical"))
-                {
-                    if(agentAttribute.getAttributeValueNumeric()==attribute.getAttributeValueNumeric())
-                    {
-                        agentList.add(agent);
-                    }
-                }
-
             }
         }
-        return agentList;
+        return result;
     }
 
 
