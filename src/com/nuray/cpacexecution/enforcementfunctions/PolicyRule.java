@@ -112,7 +112,7 @@ public class PolicyRule {
                                     " \"XACMLSpecifications.java\" file, i.e. one of the followings: \n"+ possibleStringMatchFunctions);
                         }
                     }
-                    else if (attributeType.equalsIgnoreCase("numerical"))
+                    else if (attributeType.equalsIgnoreCase("numeric"))
                     {
                         if(!XACMLSpecifications.DOUBLE_MATCH_FUNCTIONS.contains(attributeMatchingFunction))
                         {

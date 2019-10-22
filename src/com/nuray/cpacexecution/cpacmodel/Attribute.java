@@ -40,11 +40,11 @@ public class Attribute {
         {
             dataType="http://www.w3.org/2001/XMLSchema#string";
         }
-        else if(attributeType.equalsIgnoreCase("numerical"))
+        else if(attributeType.equalsIgnoreCase("numeric"))
         {
             if(attributeRange==null)
             {
-                throw new IllegalArgumentException("An attribute range should be defined for numerical attributes");
+                throw new IllegalArgumentException("An attribute range should be defined for numeric attributes");
             }
 
             dataType="http://www.w3.org/2001/XMLSchema#double";

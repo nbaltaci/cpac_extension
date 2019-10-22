@@ -6,6 +6,6 @@ import java.util.List;
 
 public class EnforcementSpecifications {
 
-    public static final List<String> policyRuleEffects=new ArrayList<>(Arrays.asList(new String[]{"permit","deny"}));
+    public static final List<String> policyRuleEffects=new ArrayList<>(Arrays.asList(new String[]{"Permit","Deny"}));
 
 }

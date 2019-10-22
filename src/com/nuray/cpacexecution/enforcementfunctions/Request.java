@@ -24,7 +24,7 @@ public abstract class Request {
         agentAttributes=new ArrayList<>();
         actionAttributes=new HashMap<>();
         requestId++;
-        requestContentXACML=constructXACMLRequest();
+//        requestContentXACML=constructXACMLRequest();
     }
 
     public Request(String operationalMode) throws Exception {
@@ -101,7 +101,7 @@ public abstract class Request {
     }
 
     /**
-     * This function is used to construct an XACML request from an AAR (Agent-initated Access RequestOld).
+     * This function is used to construct an XACML request from an AAR (Agent-initated Access Request).
      * To use this method, "enhanceIAR()" method should be used first in order to enhance a given
      * IAR (initial access request) and obtained an AAR.
      *
@@ -111,17 +111,17 @@ public abstract class Request {
     public String constructXACMLRequest() throws Exception {
 
         //request start line
-        String startLine="<RequestOld CombinedDecision=\"false\" ReturnPolicyIdList=\"false\" xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\">";
+        String startLine="<Request CombinedDecision=\"false\" ReturnPolicyIdList=\"false\" xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\">";
         String subjectLines=constructSubjectPartOfRequest();
         String resourceLines=constructResourcePartOfRequest();
         String actionLines=constructActionPartOfRequest();
 
-        return startLine+"\n"+subjectLines+"\n"+resourceLines+"\n"+actionLines+"</RequestOld>";
+        return startLine+"\n"+subjectLines+"\n"+resourceLines+"\n"+actionLines+"\n</Request>";
     }
 
     private String constructSubjectPartOfRequest() throws Exception {
 
-        String subjectXACML=" <Attributes Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\">\n" ;
+        String subjectXACML=" <Attributes Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:subject\">\n" ;
 
         String agentAttributeBlock = constructAttributes(agentAttributes,false,true,false);
 
@@ -136,9 +136,9 @@ public abstract class Request {
 
         String resourceXACML="    <Attributes Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n";
 
-        String agentAttributeBlock = constructAttributes(resourceAttributes,true,false,false);
+        String resourceAttributeBlock = constructAttributes(resourceAttributes,true,false,false);
 
-        resourceXACML=resourceXACML+agentAttributeBlock;
+        resourceXACML=resourceXACML+resourceAttributeBlock;
 
         resourceXACML= resourceXACML + "   </Attributes>";
 
@@ -184,58 +184,59 @@ public abstract class Request {
     private String constructAttributeBlock(Attribute attribute, boolean isResourceAtt,
                                            boolean isSubjectAtt, boolean isActionAtt) throws Exception {
         String attributeBlock="";
-
-        String attributeName=attribute.getAttributeName();;
-        String attributeType=attribute.getAttributeType();
-        String dataType=attribute.getDataType();
-
-        if(isResourceAtt)
+        if(!attribute.isValueSet()==false)
         {
-            attributeBlock= "        <Attribute AttributeId=\"urn:oasis:names:tc:xacml:1.0:resource:"
-                    +attributeName+"\" IncludeInResult=\"false\">";
-        }
-        else if(isSubjectAtt)
-        {
-            attributeBlock= "        <Attribute AttributeId=\"urn:oasis:names:tc:xacml:1.0:subject:"+attributeName+"\" IncludeInResult=\"false\">";
+            String attributeName=attribute.getAttributeName();;
+            String attributeType=attribute.getAttributeType();
+            String dataType=attribute.getDataType();
+
+            if(isResourceAtt)
+            {
+                attributeBlock= "        <Attribute AttributeId=\"" +attributeName+"\" IncludeInResult=\"false\">\n";
+            }
+            else if(isSubjectAtt)
+            {
+                attributeBlock= "        <Attribute AttributeId=\""+attributeName+"\" IncludeInResult=\"false\">\n";
+
+            }
+            else if (isActionAtt)
+            {
+                attributeBlock= "        <Attribute AttributeId=\""+attributeName+"\" IncludeInResult=\"false\">\n";
+
+            }
+            else
+            {
+                throw new IllegalArgumentException("Attribute can be either resource attribute, " +
+                        "subject attribute, or action attribute");
+            }
+
+
+            attributeBlock= attributeBlock + "         <AttributeValue DataType=\""+dataType+"\">";
+
+            if(attributeType.equalsIgnoreCase("categorical"))
+            {
+                String attributeValueCategorical = attribute.getAttributeValueCategorical();
+                attributeBlock=attributeBlock+attributeValueCategorical;
+            }
+            else if(attributeType.equalsIgnoreCase("numeric"))
+            {
+                double attributeValueNumeric = attribute.getAttributeValueNumeric();
+                attributeBlock=attributeBlock+attributeValueNumeric;
+            }
+            else if(attributeType.equalsIgnoreCase("date"))
+            {
+                Date attributeValDate = attribute.getAttributeValDate();
+                attributeBlock=attributeBlock+attributeValDate;
+            }
+            else if(attributeType.equalsIgnoreCase("time"))
+            {
+                LocalTime attributeValTime = attribute.getAttributeValTime();
+                attributeBlock = attributeBlock+attributeValTime;
+            }
+
+            attributeBlock=attributeBlock+"</AttributeValue>\n" + "      </Attribute>\n";
 
         }
-        else if (isActionAtt)
-        {
-            attributeBlock= "        <Attribute AttributeId=\"urn:oasis:names:tc:xacml:1.0:action:"+attributeName+"\" IncludeInResult=\"false\">";
-
-        }
-        else
-        {
-            throw new IllegalArgumentException("Attribute can be either resource attribute, " +
-                    "subject attribute, or action attribute");
-        }
-
-
-        attributeBlock= attributeBlock + "         <AttributeValue DataType=\""+dataType+"\">";
-
-        if(attributeType.equalsIgnoreCase("categorical"))
-        {
-            String attributeValueCategorical = attribute.getAttributeValueCategorical();
-            attributeBlock=attributeBlock+attributeValueCategorical;
-        }
-        else if(attributeType.equalsIgnoreCase("numerical"))
-        {
-            double attributeValueNumeric = attribute.getAttributeValueNumeric();
-            attributeBlock=attributeBlock+attributeValueNumeric;
-        }
-        else if(attributeType.equalsIgnoreCase("date"))
-        {
-            Date attributeValDate = attribute.getAttributeValDate();
-            attributeBlock=attributeBlock+attributeValDate;
-        }
-        else if(attributeType.equalsIgnoreCase("time"))
-        {
-            LocalTime attributeValTime = attribute.getAttributeValTime();
-            attributeBlock = attributeBlock+attributeValTime;
-        }
-
-        attributeBlock=attributeBlock+"</AttributeValue>\n" + "      </Attribute>\n";
-        
 
         return attributeBlock;
     }

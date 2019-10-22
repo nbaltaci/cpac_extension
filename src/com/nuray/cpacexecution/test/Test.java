@@ -24,22 +24,30 @@ public class Test {
     public static void main(String [] args) throws Exception {
 
 //        testVAR(false,"active"); //==> this is no sod violation case (i.e. lines 14-18 of algorithm executeCPAC is not run)
-//        I need to find a violation case
 //        // ==> since this is no SoD violation case, set the parameter to false
 
 //        testVAR(true,"active");// ==> sod violation case for operational mode="active"
 //        // note that lines 15 and 16 of the algorithm will not be executed since it is not emergency. So,
 //        // sod violation will not be allowed.
 
-        testVAR(true,"emergency");// ==> sod violation case for operational mode="emergency"
-        // note that lines 15 and 16 of the algorithm will be executed since it is emergency.
-        // So, sod violation will be allowed based on risk values.==> for our test case, risk(sod)=500,
-        // risk(v_cur)=risk(v_next)=0, so violation will not be allowed.
+//        testVAR(true,"emergency");// ==> sod violation case for operational mode="emergency"
+//        // note that lines 15 and 16 of the algorithm will be executed since it is emergency.
+//        // So, sod violation will be allowed based on risk values.==> for our test case, risk(sod)=500,
+//        // risk(v_cur)=risk(v_next)=0, so violation will not be allowed.
 
+        testIAR(false,"active"); //==> this is no sod violation case (i.e. lines 25-31 of algorithm executeCPAC is not run)
+        // ==> since this is no SoD violation case, set the parameter to false
 
+//        testIAR(true,"active"); // ==> sod violation case for operational mode="active"
+//        // note that lines 27-29 of the algorithm will not be executed since it is not emergency. So,
+//       // sod violation will not be allowed.
 
-
-
+//        testIAR(true,"emergency");// ==> sod violation case for operational mode="emergency"
+//        // note that lines 27-29 of the algorithm will be executed since it is emergency.
+//        // So, sod violation will be allowed based on risk values.==> for our test case, risk(sod)=500,
+//        // risk(v_cur)=risk(v_next)=0, so violation will not be allowed. (I also tested the case where
+//        // risk(sod)=500<risk(v_cur)=risk(v_next), so violation allowed (by changing risk values of v_cur and v_next
+//        // in testIAR() method)).
 
 
 
@@ -55,10 +63,38 @@ public class Test {
         Resource resource = resourceBase.getResourceList().get(0);// ==> since there is single resource in my test case
         Agent agent = agentBase.getAgentList().get(0);// ==> since there is single agent in my test case
         List<Action> actions = actionBase.getActionList();
+        List<Action> actionListForIAR=new LinkedList<>();
 
         Vertex v_cur=new Vertex(1);
+//        v_cur.setRisk(501.0);
+        Vertex v_next=new Vertex(2);
+//        v_next.setRisk(1.0);
 
-        List<Agent> agentList = executionOfCPAC.executeCPAC(null,null, operationalMode, v_cur);
+        if(isSoDViolation)
+        {
+            Action action = actions.get(1); // ==> I know that the second action is infuseDrug1, so I am adding this when
+            // I want SoD violation (because policy rule (for sod violation case) provides a permission with the following action:
+            //  infuseDrug2, and the sod has two permissions with two conflicting actions: infuseDrug1 and infuseDrug2.
+            actionListForIAR.add(action);
+        }
+        else
+        {
+            Action action = actions.get(0); // ==> I know that the first action is deliverHeparin, so I am adding this when
+            // I don't want SoD violation (because policy rule (for no sod violation case) provides a permission with the following action:
+            // deliverHeparin, and the sod has two permissions with two conflicting actions: infuseDrug1 and infuseDrug2.
+
+            actionListForIAR.add(action);
+        }
+
+        Permission permForIAR=new Permission(resource,actionListForIAR);
+        InitialAccessRequest iar=new InitialAccessRequest(permForIAR,agent);
+
+        List<Agent> agentList = executionOfCPAC.executeCPAC(iar,null, operationalMode, v_cur,v_next);
+
+        // remove published policies and clear decision cache of wso2 identity server, entitlement service.
+        // Otherwise, it yields wrong results.
+        AuthorizationDecision authorizationDecision = executionOfCPAC.getAuthorizationDecision();
+        authorizationDecision.removePolicies(policyBase.getPolicyList());
     }
 
     public static void testVAR(boolean isSoDViolation,String operationalMode) throws Exception {
@@ -74,14 +110,53 @@ public class Test {
 
 
         // 4.a. generate varList_v_cur (based on generated resource,actions, and agent (and operational mode))
-        Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>> varList_v = generateVarListForTest(agent, resource,
+        Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>> varList_v_cur = generateVarListForTest(agent, resource,
                                                                                                     actions, operationalMode);
         Vertex v_cur=new Vertex(1);
         //        int[] finalStates={3,4};
 //        Queue<Map<Vertex,Queue<Map<Edge, VirtualAccessRequest>>>> varList_v=generateVarListForExperiment(1,1,
 //                                                                                            3,finalStates);
 
-        List<Agent> agentList = executionOfCPAC.executeCPAC(null, varList_v, operationalMode, v_cur);
+        // find v_next from varList_v
+
+        Vertex v_next=null;
+
+        Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>> vertexQueueMap = varList_v_cur.poll();
+
+        Vertex finalState = vertexQueueMap.keySet().iterator().next();
+        Queue<Map<Edge, VirtualAccessRequest>> varList_f = vertexQueueMap.get(finalState);
+
+        Map<Edge, VirtualAccessRequest> edgeVarMap_v_cur = varList_f.poll();
+
+        Edge edgeFrom_v_cur = edgeVarMap_v_cur.keySet().iterator().next();
+        Vertex sourceVertex=edgeFrom_v_cur.getSourceVertex();
+
+        if(sourceVertex.equals(v_cur))
+        {
+            v_next=edgeFrom_v_cur.getTargetVertex();
+
+            Map<Edge, VirtualAccessRequest> edgeVarMap_v_next = varList_f.poll();
+
+            Edge edgeFrom_v_next = edgeVarMap_v_next.keySet().iterator().next();
+            sourceVertex=edgeFrom_v_next.getSourceVertex();
+
+            if(!sourceVertex.equals(v_next))
+            {
+                throw new Exception("Shortest path (or varList) is computed wrong!");
+            }
+        }
+        else
+        {
+            throw new Exception("Shortest path (or varList) is computed wrong!");
+        }
+
+
+
+        List<Agent> agentList = executionOfCPAC.executeCPAC(null, varList_v_cur, operationalMode, v_cur,v_next);
+
+        // remove published policies
+        AuthorizationDecision authorizationDecision = executionOfCPAC.getAuthorizationDecision();
+        authorizationDecision.removePolicies(policyBase.getPolicyList());
     }
 
     private static void generatePoliciesAndPolicyElements(boolean isSoDViolation,String operationalMode) throws Exception {
@@ -105,14 +180,14 @@ public class Test {
 
         // 2.a.2. add resource attribute "ACT_ref"
         Attribute ACT_ref=new Attribute("ACT_ref",new AttributeRange(150,200),"numeric");
-        resource.addResourceAttribute(ACT_ref);
+//        resource.addResourceAttribute(ACT_ref);
 
         // 2.a.3. add resource attribute "ACT_cur"
         Attribute ACT_cur_lower=new Attribute("ACT_cur_lower",new AttributeRange(0,Double.MAX_VALUE),"numeric");
-        ACT_cur_lower.setAttributeValueNumeric(ACT_ref.getAttributeRange().getLowerLimit());
+        ACT_cur_lower.setAttributeValueNumeric(ACT_ref.getAttributeRange().getLowerLimit()+1);
 
         Attribute ACT_cur_upper=new Attribute("ACT_cur_upper",new AttributeRange(0,Double.MAX_VALUE),"numeric");
-        ACT_cur_upper.setAttributeValueNumeric(ACT_ref.getAttributeRange().getUpperLimit());
+        ACT_cur_upper.setAttributeValueNumeric(ACT_ref.getAttributeRange().getUpperLimit()-1);
 
         resource.addResourceAttribute(ACT_cur_lower);
         resource.addResourceAttribute(ACT_cur_upper);
@@ -170,14 +245,14 @@ public class Test {
         Map<String, List<Map<Attribute, String>>> actionAttMatchFuncListMap=new HashMap<>();
         actionAttMatchFuncListMap.put("action group 1",actionAttributes);
 
+        // Note that policy effect should start with uppercase letter, otherwise WSO2 identity server throws an error for invalid policy.
         PolicyRule policyRule=new PolicyRule(resourceAttMatchFuncListMap,agentAttMatchFuncListMap,
                 actionAttMatchFuncListMap,null,
-                "active","sample CPAC policy rule","permit");
+                "active","sample-CPAC-policy-rule","Permit");
 
-        Policy policy=new Policy("sample CPAC policy",
-                "urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides",
+        Policy policy=new Policy("sample-CPAC-policy",
+                "urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit",
                 new ArrayList<>(Arrays.asList(new PolicyRule[]{policyRule})));
-
 
         return policy;
 
