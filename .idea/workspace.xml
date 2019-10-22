@@ -3,22 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="dd8c35c9-09c2-4ade-a2a8-804ce39981d8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/ExecutionOfCPAC.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/ExecutionOfCPAC.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Attribute.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Attribute.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/AuthorizationDecision.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/AuthorizationDecision.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/EnforcementSpecifications.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/EnforcementSpecifications.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/Policy.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/Policy.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/PolicyRule.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/PolicyRule.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/Request.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/Request.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/test/Test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/ExecutionOfCPAC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/ExecutionOfCPAC.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Attribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Attribute.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/AuthorizationDecision.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/AuthorizationDecision.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/EnforcementSpecifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/EnforcementSpecifications.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/Policy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/Policy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/PolicyRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/PolicyRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/Request.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/test/Test.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -42,11 +29,6 @@
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
-  </component>
-  <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="1370" />
-    <option name="height" value="744" />
   </component>
   <component name="ProjectId" id="1SArwSO0qwgwUHCxD0XzJkKUCSo" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -153,7 +135,9 @@
       <workItem from="1570741180644" duration="44973000" />
       <workItem from="1571017489137" duration="28231000" />
       <workItem from="1571258665402" duration="63197000" />
-      <workItem from="1571706381003" duration="263000" />
+      <workItem from="1571706381003" duration="541000" />
+      <workItem from="1571710720502" duration="2960000" />
+      <workItem from="1571754725884" duration="243000" />
     </task>
     <servers />
   </component>
@@ -287,16 +271,6 @@
           <option name="timeStamp" value="134" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$PROJECT_DIR$/../WSO2APICall/classes/artifacts/WSO2APICall_jar/WSO2APICall.jar!/com/nuray/wso2/Test.class</url>
-          <line>600</line>
-          <option name="timeStamp" value="140" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$PROJECT_DIR$/../WSO2APICall/classes/artifacts/WSO2APICall_jar/WSO2APICall.jar!/com/nuray/wso2/Test.class</url>
-          <line>603</line>
-          <option name="timeStamp" value="141" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/ExecutionOfCPAC.java</url>
           <line>181</line>
           <option name="timeStamp" value="145" />
@@ -318,8 +292,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/test/Test.java</url>
+          <line>44</line>
+          <option name="timeStamp" value="158" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/test/Test.java</url>
           <line>37</line>
-          <option name="timeStamp" value="156" />
+          <option name="timeStamp" value="162" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

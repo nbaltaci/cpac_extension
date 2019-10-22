@@ -66,9 +66,9 @@ public class Test {
         List<Action> actionListForIAR=new LinkedList<>();
 
         Vertex v_cur=new Vertex(1);
-//        v_cur.setRisk(501.0);
+        v_cur.setRisk(501.0);
         Vertex v_next=new Vertex(2);
-//        v_next.setRisk(1.0);
+        v_next.setRisk(1.0);
 
         if(isSoDViolation)
         {
