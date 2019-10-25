@@ -126,9 +126,6 @@ public class VARGeneration {
         }
     }
 
-
-
-
     public void solve () {
         findOptimum();
         printVertexesOnShortestPath(startVertex,targetVertex);

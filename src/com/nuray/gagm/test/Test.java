@@ -5,10 +5,7 @@ import com.nuray.cpacexecution.enforcementfunctions.VirtualAccessRequest;
 import com.nuray.cpacexecution.storage.ActionBase;
 import com.nuray.gagm.experiment.CompleteGraph;
 import com.nuray.gagm.experiment.Sparse;
-import com.nuray.gagm.pathfinder.Edge;
-import com.nuray.gagm.pathfinder.Graph;
-import com.nuray.gagm.pathfinder.VARGeneration;
-import com.nuray.gagm.pathfinder.Vertex;
+import com.nuray.gagm.pathfinder.*;
 
 import java.util.*;
 
@@ -18,9 +15,11 @@ import java.util.*;
 public class Test {
 
     private static int[][] adjacencyMatrix;
-    private static com.nuray.gagm.pathfinder.VARGeneration VARGeneration;
     private static Sparse sparse;
     private static CompleteGraph complete;
+
+    private static com.nuray.gagm.pathfinder.VARGeneration VARGeneration;
+    private static com.nuray.gagm.pathfinder.VARGenerationMultipleShortestPathVersion VARGenerationMultipleShortestPathVersion;
 
     public static void main(String[] args) throws Exception {
 //        printResultsforSparseGraph(1,1,3,new int[]{3});
@@ -32,7 +31,20 @@ public class Test {
 //        int[] finalStates=new int[]{6,12};
 //        printResultsforSparseGraph(2,5,12, finalStates);
 
-        varSetTest("sparse",1,1,3,new int[]{3,4});
+//        varSetTest("sparse",1,1,3,new int[]{3,4});
+
+        // test the case when there may be multiple shortest paths between a given source and destination vertex
+//        printResultsForMultiplePathCase("sparse",4,1,3,new int[]{3});
+
+        // test the case when there may be multiple shortest paths between a given source and destination vertex, but
+        // multiple paths are reduced to a single shortest path based on minimum privilege criteria (allowed permissions on
+        // edges)
+//        printResultsforReducedCase("sparse",4,1,3,new int[]{3});
+
+
+        // Reduced case test for generating vars
+        varSetTestForReducedCase("sparse",4,1,3,new int[]{3});
+
 
 
     }
@@ -45,6 +57,40 @@ public class Test {
     private static void printResultsforCompleteGraph(int testCaseNumber, int sourceVertex,int destinationVertex,int[] finalStates) throws Exception
     {
         printResultsforTestCases("complete",testCaseNumber,sourceVertex,destinationVertex,finalStates);
+    }
+
+    private static void printResultsForMultiplePathCase(String graphType,int testCaseNumber,
+                                                        int sourceVertex,int destinationVertex, int[] finalStates) throws Exception {
+        Graph graph=initializeGraph(graphType,testCaseNumber,finalStates);
+
+        System.out.println("TEST CASE "+testCaseNumber+":");
+
+        System.out.println("Shortest Paths:\n From vertex "+sourceVertex+" to vertex "+destinationVertex);
+
+        long beginTime=new Date().getTime();
+        VARGenerationMultipleShortestPathVersion varGenMSPVersion =
+                new VARGenerationMultipleShortestPathVersion(graph, sourceVertex, destinationVertex, finalStates);
+        varGenMSPVersion.solve();
+        long endTime=new Date().getTime();
+
+        System.out.println("Running time for "+adjacencyMatrix.length+" vertices: "+(endTime-beginTime));
+    }
+
+    private static void printResultsforReducedCase(String graphType,int testCaseNumber,
+                                                   int sourceVertex,int destinationVertex, int[] finalStates) throws Exception {
+        Graph graph=initializeGraph(graphType,testCaseNumber,finalStates);
+
+        System.out.println("TEST CASE "+testCaseNumber+":");
+
+        System.out.println("Shortest Paths:\n From vertex "+sourceVertex+" to vertex "+destinationVertex);
+
+        long beginTime=new Date().getTime();
+        VARGenerationMultipleShortestPathVersion varGenMSPVersion =
+                new VARGenerationMultipleShortestPathVersion(graph, sourceVertex, destinationVertex, finalStates);
+        varGenMSPVersion.solveReduced();
+        long endTime=new Date().getTime();
+
+        System.out.println("Running time for "+adjacencyMatrix.length+" vertices: "+(endTime-beginTime));
     }
 
 
@@ -125,7 +171,69 @@ public class Test {
                     }
                 }
             }
+        }
+    }
 
+    private static void varSetTestForReducedCase(String graphType,int testCaseNumber, int sourceVertex,int destinationVertex,
+                                   int[] finalStates) throws Exception
+    {
+        Graph graph = initializeGraph(graphType, testCaseNumber, finalStates);
+
+        System.out.println("TEST CASE "+testCaseNumber+":");
+
+        VARGenerationMultipleShortestPathVersion =
+                new VARGenerationMultipleShortestPathVersion(graph,sourceVertex,destinationVertex,finalStates);
+
+        Set<Graph> subGraphSet=new HashSet<Graph>();
+        subGraphSet.add(graph);
+
+        Map<String, Queue<Map<Vertex, Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>>>>> varSet =
+                VARGenerationMultipleShortestPathVersion.generateVAR(subGraphSet);
+        Iterator<String> varSetIterator = varSet.keySet().iterator();
+
+        while (varSetIterator.hasNext()) {
+            String m = varSetIterator.next();  // m = operational mode
+            Queue<Map<Vertex, Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>>>> varSet_m = varSet.get(m);
+
+            System.out.println("Now printing varSet for " + m + " mode:");
+            System.out.println("\t Shortest Paths (vars on the shortest path):");
+
+            while (!varSet_m.isEmpty()) {
+                Map<Vertex, Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>>> varListMap = varSet_m.poll();
+
+                Iterator<Vertex> varListIterator = varListMap.keySet().iterator();
+
+                while (varListIterator.hasNext()) {
+                    Vertex sourceState = varListIterator.next();
+                    Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>> varList_v_Map = varListMap.get(sourceState);
+
+                    while (!varList_v_Map.isEmpty()) {
+                        Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>> varList_v = varList_v_Map.poll();
+                        Iterator<Vertex> varList_v_Iterator = varList_v.keySet().iterator();
+
+                        while (varList_v_Iterator.hasNext()) {
+                            Vertex finalState = varList_v_Iterator.next();
+                            Queue<Map<Edge, VirtualAccessRequest>> varList_f = varList_v.get(finalState);
+
+                            System.out.println("\t \t From vertex " + sourceState.getVertexID() + " to vertex " + finalState.getVertexID() + "\n");
+
+                            while (!varList_f.isEmpty()) {
+                                Map<Edge, VirtualAccessRequest> edgeVarMap = varList_f.poll();
+                                Iterator<Edge> edgeIterator = edgeVarMap.keySet().iterator();
+
+                                while (edgeIterator.hasNext()) {
+                                    Edge edge = edgeIterator.next();
+                                    VirtualAccessRequest var = edgeVarMap.get(edge);
+                                    int requestId = var.getRequestId();
+                                    System.out.println("\t \t \t v" + edge.getSourceVertex().getVertexID() +
+                                            " --> v" + edge.getTargetVertex().getVertexID() +
+                                            ": var" + requestId);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

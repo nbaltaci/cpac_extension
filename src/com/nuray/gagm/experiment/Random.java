@@ -19,6 +19,10 @@ public class Random {
     private int resourceAttValueCounter;  // for generating random attribute values
     private int actionAttValueCounter;  // for generating random attribute values
 
+    private int resourceCounter; // for generating random resources into resourceBase
+    private int agentCounter; // for generating random agents into agentBase
+
+
     public Random()
     {
 
@@ -199,7 +203,9 @@ public class Random {
         return actionToAttMap;
     }
 
-    private List<Attribute> generateAttsForVar(int nAttributes) throws Exception {
+
+    private List<Attribute> generateAttsForVar(int nAttributes) throws Exception
+    {
         // generate resource attributes
         List<Attribute> attList=new LinkedList<Attribute>();
 
@@ -209,7 +215,6 @@ public class Random {
             attribute.setAttributeValueCategorical("value"+(i+1));
             attList.add(attribute);
         }
-
         return attList;
     }
 
