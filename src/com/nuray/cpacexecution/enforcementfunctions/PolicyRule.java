@@ -197,16 +197,26 @@ public class PolicyRule {
                 String attributeName = actionAtt.getAttributeName();
 
                 Action action=null;
-                if(attributeName.equalsIgnoreCase("actionID"))
+//                if(attributeName.equalsIgnoreCase("actionID"))
+//                {
+//                    String actionIDVal = actionAtt.getAttributeValueCategorical();
+//                    action=actionBase.getActionWithActionID(actionIDVal);
+//                }
+//                if(!actionList.contains(action))
+//                {
+//                    actionList.add(action);
+//                }
+
+                List<Action> actions=actionBase.getActionsWithAttributeValue(actionAtt);
+                for (Action act:actions)
                 {
-                    String actionIDVal = actionAtt.getAttributeValueCategorical();
-                    action=actionBase.getActionWithActionID(actionIDVal);
+                    if(!actionList.contains(act))
+                    {
+                        actionList.add(act);
+                    }
                 }
 
-                if(!actionList.contains(action))
-                {
-                    actionList.add(action);
-                }
+
             }
         }
 
@@ -225,23 +235,33 @@ public class PolicyRule {
                 Attribute resourceAtt = attMFPair.keySet().iterator().next(); // the map here is a single-element map (a single resource att
                 //and its value, so we only get a single element using "next" method
 
-                String attributeName = resourceAtt.getAttributeName();
+//                String attributeName = resourceAtt.getAttributeName();
+//
+////                Resource resource=null;
+////                if(attributeName.equalsIgnoreCase("resourceID"))
+////                {
+////                    String resourceIDVal = resourceAtt.getAttributeValueCategorical();
+////                    resource = resourceBase.getResourceWithResourceID(resourceIDVal);
+////                    if(!resourceList.contains(resource))
+////                    {
+////                        resourceList.add(resource);
+////                    }
+////
+////                    Permission permission=new Permission(resource,actionList);
+////                    permissionList.add(permission);
+////                }
 
-                Resource resource=null;
-                if(attributeName.equalsIgnoreCase("resourceID"))
+                List<Resource> resources = resourceBase.getResourcesWithAttributeValue(resourceAtt);
+
+                for (Resource res:resources)
                 {
-                    String resourceIDVal = resourceAtt.getAttributeValueCategorical();
-                    resource = resourceBase.getResourceWithResourceID(resourceIDVal);
-                    if(!resourceList.contains(resource))
+                    Permission permission=new Permission(res,actionList);
+
+                    if(!permissionList.contains(permission))
                     {
-                        resourceList.add(resource);
+                        permissionList.add(permission);
                     }
-
-                    Permission permission=new Permission(resource,actionList);
-                    permissionList.add(permission);
                 }
-
-
             }
 
         }

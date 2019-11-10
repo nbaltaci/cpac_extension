@@ -1,11 +1,9 @@
 package com.nuray.cpacexecution.storage;
 
+import com.nuray.cpacexecution.cpacmodel.Attribute;
 import com.nuray.cpacexecution.cpacmodel.Resource;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ResourceBase {
     private List<Resource> resourceList;
@@ -57,5 +55,43 @@ public class ResourceBase {
     public List<Resource> getResourceList()
     {
         return resourceList;
+    }
+
+    public List<Resource> getResourcesWithAttributeValue(Attribute attribute) throws Exception {
+
+        List<Resource> result=new LinkedList<>();
+        Iterator<Resource> resourceIterator = resourceList.iterator();
+
+        while (resourceIterator.hasNext())
+        {
+            Resource resource = resourceIterator.next();
+
+            List<Attribute> resourceAttributes=resource.getResourceAttributes();
+
+            for (Attribute resourceAtt:resourceAttributes)
+            {
+                if(resourceAtt.getAttributeName().equalsIgnoreCase(attribute.getAttributeName()))
+                {
+                    if(resourceAtt.isValueSet())
+                    {
+                        if(resourceAtt.getAttributeType().equalsIgnoreCase("categorical"))
+                        {
+                            if(resourceAtt.getAttributeValueCategorical().equalsIgnoreCase(attribute.getAttributeValueCategorical()))
+                            {
+                                result.add(resource);
+                            }
+                        }
+                        if(resourceAtt.getAttributeType().equalsIgnoreCase("numeric"))
+                        {
+                            if(resourceAtt.getAttributeValueNumeric()==attribute.getAttributeValueNumeric())
+                            {
+                                result.add(resource);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

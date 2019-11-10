@@ -118,4 +118,8 @@ public class Graph {
 
     }
 
+    public int[] getFinalStates()
+    {
+        return finalStates;
+    }
 }

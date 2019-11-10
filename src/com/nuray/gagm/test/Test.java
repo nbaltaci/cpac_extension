@@ -31,7 +31,7 @@ public class Test {
 //        int[] finalStates=new int[]{6,12};
 //        printResultsforSparseGraph(2,5,12, finalStates);
 
-//        varSetTest("sparse",1,1,3,new int[]{3,4});
+        varSetTest("sparse",1,1,3,new int[]{3,4});
 
         // test the case when there may be multiple shortest paths between a given source and destination vertex
 //        printResultsForMultiplePathCase("sparse",4,1,3,new int[]{3});

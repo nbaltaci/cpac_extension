@@ -1,11 +1,9 @@
 package com.nuray.cpacexecution.storage;
 
 import com.nuray.cpacexecution.cpacmodel.Action;
+import com.nuray.cpacexecution.cpacmodel.Attribute;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ActionBase {
 
@@ -56,4 +54,43 @@ public class ActionBase {
     {
         return actionList;
     }
+
+    public List<Action> getActionsWithAttributeValue(Attribute attribute) throws Exception {
+
+        List<Action> result=new LinkedList<>();
+        Iterator<Action> actionIterator = actionList.iterator();
+
+        while (actionIterator.hasNext())
+        {
+            Action action = actionIterator.next();
+
+            List<Attribute> actionAttributes=action.getActionAttributes();
+
+            for (Attribute actionAtt:actionAttributes)
+            {
+                if(actionAtt.getAttributeName().equalsIgnoreCase(attribute.getAttributeName()))
+                {
+                    if(actionAtt.isValueSet())
+                    {
+                        if(actionAtt.getAttributeType().equalsIgnoreCase("categorical"))
+                        {
+                            if(actionAtt.getAttributeValueCategorical().equalsIgnoreCase(attribute.getAttributeValueCategorical()))
+                            {
+                                result.add(action);
+                            }
+                        }
+                        if(actionAtt.getAttributeType().equalsIgnoreCase("numeric"))
+                        {
+                            if(actionAtt.getAttributeValueNumeric()==attribute.getAttributeValueNumeric())
+                            {
+                                result.add(action);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
 }

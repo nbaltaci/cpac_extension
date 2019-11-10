@@ -23,15 +23,15 @@ public class Test {
 
     public static void main(String [] args) throws Exception {
 
-//        testVAR(false,"active"); //==> this is no sod violation case (i.e. lines 14-18 of algorithm executeCPAC is not run)
+        testVAR(false,"active"); //==> this is no sod violation case (i.e. lines 12-17 of algorithm executeCPAC is not run)
 //        // ==> since this is no SoD violation case, set the parameter to false
 
 //        testVAR(true,"active");// ==> sod violation case for operational mode="active"
-//        // note that lines 15 and 16 of the algorithm will not be executed since it is not emergency. So,
+//        // note that lines 14 and 15 of the algorithm will not be executed since it is not emergency. So,
 //        // sod violation will not be allowed.
 
 //        testVAR(true,"emergency");// ==> sod violation case for operational mode="emergency"
-//        // note that lines 15 and 16 of the algorithm will be executed since it is emergency.
+//        // note that lines 14 and 15 of the algorithm will be executed since it is emergency.
 //        // So, sod violation will be allowed based on risk values.==> for our test case, risk(sod)=500,
 //        // risk(v_cur)=risk(v_next)=0, so violation will not be allowed.
 
@@ -479,43 +479,7 @@ public class Test {
         return varList_v_start;
     }
 
-    private static Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>> generateVarListForExperiment(int testCaseNo,
-                                                                                                           int startVertexNo,
-                                                                                                           int targetVertexNo,
-                                                                                                           int[] finalStates) throws Exception {
-        // following method generates an emergency sub-graph for test purposes
-        Graph graph = com.nuray.gagm.test.Test.initializeGraph("sparse", testCaseNo, finalStates);
 
-        VARGeneration varGeneration =new VARGeneration(graph,startVertexNo,targetVertexNo,finalStates);
-
-        Set<Graph> subGraphSet=new HashSet<Graph>();
-        subGraphSet.add(graph);
-
-        Map<String, Queue<Map<Vertex, Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>>>>> varSet =
-                varGeneration.generateVAR(subGraphSet);
-
-        Queue<Map<Vertex, Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>>>> varSet_m = varSet.get("emergency");
-
-        Vertex startVertex=new Vertex(1);
-        Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>> varList_v_start=new LinkedList<>();
-
-        while(!varSet_m.isEmpty())
-        {
-            Map<Vertex, Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>>> varList_v = varSet_m.poll();
-            Iterator<Vertex> iterator = varList_v.keySet().iterator();
-
-            while (iterator.hasNext())
-            {
-                Vertex sourceVertex = iterator.next();
-                if(sourceVertex.equals(startVertex))
-                {
-                    varList_v_start = varList_v.get(sourceVertex);
-                }
-            }
-        }
-
-        return varList_v_start;
-    }
 
 
 

@@ -44,7 +44,17 @@ public class Random {
 
     public int generateRandomIndex()
     {
-        return (int)(Math.random()*((upperLimit-lowerLimit)+1));
+        return lowerLimit+(int)(Math.random()*((upperLimit-lowerLimit)+1));
+//        return (int)(Math.random()*((upperLimit-lowerLimit)+1));
+
+    }
+
+    public double doubleRandomInclusive(double max, double min) {
+        double r = Math.random();
+        if (r < 0.5) {
+            return ((1 - Math.random()) * (max - min) + min);
+        }
+        return (Math.random() * (max - min) + min);
     }
 
 
@@ -67,7 +77,7 @@ public class Random {
         return Math.random() < fraction;
     }
 
-    private boolean getRandomBoolean() {
+    public boolean getRandomBoolean() {
 
         int randNum= (int) Math.round(Math.random());
         if(randNum==1)
@@ -169,10 +179,10 @@ public class Random {
     public VirtualAccessRequest generateRandomVar(int nAgentAtt, int nResAtt, int nActionAtt, int nActions,
                                                   ActionBase actionBase, String operationalMode) throws Exception {
         // generate agent attributes
-        List<Attribute> agentAttList=generateAttsForVar(nAgentAtt);
+        List<Attribute> agentAttList=generateAttributes(nAgentAtt);
 
         // generate resource attributes
-        List<Attribute> resourceAttList=generateAttsForVar(nResAtt);
+        List<Attribute> resourceAttList=generateAttributes(nResAtt);
 
         //generate action attributes
         Map<Action,List<Attribute>> actionToAttMap=generateActionsAndActionAttributes(nActionAtt,nActions,actionBase);
@@ -191,7 +201,7 @@ public class Random {
         for(int i=0;i<nActions;i++)
         {
             // generate action attributes
-            List<Attribute> attList=generateAttsForVar(nAttributes);
+            List<Attribute> attList=generateAttributes(nAttributes);
 
             //generate a random action type (from these options: object-oriented or cyber-physical)
             String actionType=generateActionType();
@@ -204,37 +214,113 @@ public class Random {
     }
 
 
-    private List<Attribute> generateAttsForVar(int nAttributes) throws Exception
-    {
-        // generate resource attributes
-        List<Attribute> attList=new LinkedList<Attribute>();
+//    private List<Attribute> generateAttsForVar(int nAttributes) throws Exception
+//    {
+//        // generate resource attributes
+//        List<Attribute> attList=new LinkedList<Attribute>();
+//
+//        for(int i=0; i<nAttributes; i++)
+//        {
+//            Attribute attribute=new Attribute("attribute"+(i+1),null,"categorical");
+//            attribute.setAttributeValueCategorical("value"+(i+1));
+//            attList.add(attribute);
+//        }
+//        return attList;
+//    }
 
-        for(int i=0; i<nAttributes; i++)
-        {
-            Attribute attribute=new Attribute("attribute"+(i+1),null,"categorical");
-            attribute.setAttributeValueCategorical("value"+(i+1));
-            attList.add(attribute);
+    public List<Attribute> generateAttributes(int nAttributes) throws Exception {
+        Attribute attribute=null;
+        Random random=new Random();
+        List<Attribute> attributes=new LinkedList<>();
+        for(int i=0;i<nAttributes;i++) {
+            boolean isCategoricalAttribute = random.getRandomBoolean();
+            if (isCategoricalAttribute) {
+                // generate 5 possible string attribute values
+                String[] values = new String[5];
+                for (int j = 0; j < 5; j++) {
+                    values[j] = "value" + (j + 1);
+                }
+                List<String> possibleValues = new ArrayList<>(Arrays.asList(values));
+                AttributeRange attributeRange = new AttributeRange(possibleValues);
+                attribute = new Attribute("attributeName" + (i + 1), attributeRange, "categorical");
+
+
+//                // assign an attribute value to the attribute randomly from randomly generated attribute range values
+//                Random random2 = new Random(1, 5);
+//                int index = random2.generateRandomIndex();
+//                String value = values[index - 1];
+//                attribute.setAttributeValueCategorical(value);
+            } else {
+                attribute = new Attribute("attributeName" + (i + 1), new AttributeRange(150, 200), "numeric");
+//                attribute.setAttributeValueNumeric(attribute.getAttributeRange().getLowerLimit() + 1);
+            }
+            attribute=generateAttributeValue(attribute);
+            attributes.add(attribute);
         }
-        return attList;
+        return attributes;
     }
 
+    public Attribute generateAttributeValue(Attribute attribute) throws Exception {
+//        Attribute attributeToReturn=null;
 
-    private String generateActionType()
+        String attributeType = attribute.getAttributeType();
+        boolean isCategorical=attributeType.equalsIgnoreCase("categorical")?true:false;
+        if(isCategorical)
+        {
+            // assign an attribute value to the attribute randomly from randomly generated attribute range values
+
+            AttributeRange attributeRange = attribute.getAttributeRange();
+            List<String> possibleValues = attributeRange.getPossibleValues();
+
+            Random random = new Random(1, possibleValues.size());
+            int index = random.generateRandomIndex();
+            String value = possibleValues.get(index-1);
+//            attributeToReturn=new Attribute(attribute.getAttributeName(),attributeRange,attributeType);
+//            attributeToReturn.setAttributeValueCategorical(value);
+            attribute.setAttributeValueCategorical(value);
+
+        }
+        else
+        {
+            AttributeRange attributeRange = attribute.getAttributeRange();
+            double lowerLimit = attributeRange.getLowerLimit();
+            double upperLimit = attributeRange.getUpperLimit();
+            Random random=new Random();
+            double value=random.doubleRandomInclusive(lowerLimit,upperLimit);
+//            double value=lowerLimit+Math.random()*((upperLimit-lowerLimit)+1);
+//            value=(attributeRange.getUpperLimit()+attributeRange.getLowerLimit())/2;
+//            attributeToReturn=new Attribute(attribute.getAttributeName(),attributeRange,attributeType);
+//            attributeToReturn.setAttributeValueNumeric(value);
+            attribute.setAttributeValueNumeric(value);
+        }
+
+//        return attributeToReturn;
+        return attribute;
+    }
+
+    public String generateActionType()
     {
         //generate a random action type (from these options: "object-oriented" or"cyber-physical)
-//        boolean randomBoolean = getRandomBoolean();
-//        String actionType="";
-//
-//        if(randomBoolean==true)
-//        {
-//            actionType="object-oriented";
-//        }
-//        else
-//        {
-//            actionType="cyber-physical";
-//        }
-
         return getRandomBoolean() ? "object-oriented":"cyber-physical";
 //        return actionType;
+    }
+
+    public String generateResourceOrAgentType(Random random)
+    {
+        int index = random.generateRandomIndex();
+        String type="";
+        if(index==1)
+        {
+            type="human";
+        }
+        else if (index==2)
+        {
+            type="cyber";
+        }
+        else {
+            type="physical";
+        }
+
+        return type;
     }
 }

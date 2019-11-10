@@ -19,6 +19,12 @@ public class CPACSpecifications {
     //This is MO variable defined in CPAC
     public static final List<String> MO= Stream.concat(nonEmergencyModes.stream(),emergencyMode.stream()).collect(Collectors.toList());
 
+    public static final List<String> agentAttributes=new ArrayList<>(Arrays.asList(new String[]{"agentID","userName","email","role","age"}));
+    public static final List<String> resourceAttributes=new ArrayList<>(Arrays.asList(new String[]{"resourceName","resourceID"}));
+    public static final List<String> actionAttributes=new ArrayList<>(Arrays.asList(new String[]{"actionName","actionID"}));
+
+
+
 
 
 

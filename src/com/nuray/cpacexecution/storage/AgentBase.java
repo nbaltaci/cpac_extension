@@ -61,28 +61,52 @@ public class AgentBase {
 
             List<Attribute> agentAttributes = agent.getAgentAttributes();
 
-            if(agentAttributes.contains(attribute))
+            for (Attribute agentAtt:agentAttributes)
             {
-                int index = agentAttributes.indexOf(attribute);
-                Attribute agentAttribute = agentAttributes.get(index);
-                if(agentAttribute.isValueSet())
+                if(agentAtt.getAttributeName().equalsIgnoreCase(attribute.getAttributeName()))
                 {
-                    if(agentAttribute.getAttributeType().equalsIgnoreCase("categorical"))
+                    if(agentAtt.isValueSet())
                     {
-                        if(agentAttribute.getAttributeValueCategorical().equalsIgnoreCase(attribute.getAttributeValueCategorical()))
+                        if(agentAtt.getAttributeType().equalsIgnoreCase("categorical"))
                         {
-                            result.add(agent);
+                            if(agentAtt.getAttributeValueCategorical().equalsIgnoreCase(attribute.getAttributeValueCategorical()))
+                            {
+                                result.add(agent);
+                            }
                         }
-                    }
-                    if(agentAttribute.getAttributeType().equalsIgnoreCase("numerical"))
-                    {
-                        if(agentAttribute.getAttributeValueNumeric()==attribute.getAttributeValueNumeric())
+                        if(agentAtt.getAttributeType().equalsIgnoreCase("numeric"))
                         {
-                            result.add(agent);
+                            if(agentAtt.getAttributeValueNumeric()==attribute.getAttributeValueNumeric())
+                            {
+                                result.add(agent);
+                            }
                         }
                     }
                 }
             }
+
+//            if(agentAttributes.contains(attribute))
+//            {
+//                int index = agentAttributes.indexOf(attribute);
+//                Attribute agentAttribute = agentAttributes.get(index);
+//                if(agentAttribute.isValueSet())
+//                {
+//                    if(agentAttribute.getAttributeType().equalsIgnoreCase("categorical"))
+//                    {
+//                        if(agentAttribute.getAttributeValueCategorical().equalsIgnoreCase(attribute.getAttributeValueCategorical()))
+//                        {
+//                            result.add(agent);
+//                        }
+//                    }
+//                    if(agentAttribute.getAttributeType().equalsIgnoreCase("numerical"))
+//                    {
+//                        if(agentAttribute.getAttributeValueNumeric()==attribute.getAttributeValueNumeric())
+//                        {
+//                            result.add(agent);
+//                        }
+//                    }
+//                }
+//            }
         }
         return result;
     }

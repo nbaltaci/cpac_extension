@@ -54,7 +54,7 @@ public class Agent {
     public boolean equals(Object obj)
     {
         Agent other = (Agent) obj;
-        return other.agentId==this.agentId;
+        return other.agentID==this.agentID;
     }
 
     public String getAgentID()
@@ -108,5 +108,10 @@ public class Agent {
     public void setAge(Attribute age)
     {
         this.age = age;
+    }
+
+    public void addAgentAttribute(Attribute attribute)
+    {
+        agentAttributes.add(attribute);
     }
 }

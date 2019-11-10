@@ -101,6 +101,10 @@ public class VARGenerationMultipleShortestPathVersion {
         {
             return null;
         }
+        if (destinationVertex==null)
+        {
+            return null;
+        }
         Vertex previousVertex=destinationVertex.getPrevious();
 
         if(previousVertex!=startVertex)
@@ -108,21 +112,25 @@ public class VARGenerationMultipleShortestPathVersion {
             findVarListSingleDest(sourceVertex, previousVertex);
         }
 
-        List<Edge> edgeList=previousVertex.getEdges();
-
-        for (Edge e:edgeList)
+        if(previousVertex!=null)
         {
-            if( e.getTargetVertex().getVertexID()== destinationVertex.getVertexID())
+            List<Edge> edgeList=previousVertex.getEdges();
+
+            for (Edge e:edgeList)
             {
-                VirtualAccessRequest var = e.getVar();
-                if(var!=null)
+                if( e.getTargetVertex().getVertexID()== destinationVertex.getVertexID())
                 {
-                    Map<Edge,VirtualAccessRequest> map=new HashMap<>();
-                    map.put(e,var);
-                    varList_f.add(map);
+                    VirtualAccessRequest var = e.getVar();
+                    if(var!=null)
+                    {
+                        Map<Edge,VirtualAccessRequest> map=new HashMap<>();
+                        map.put(e,var);
+                        varList_f.add(map);
+                    }
                 }
             }
         }
+
 
         return varList_f;
     }
