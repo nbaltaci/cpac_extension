@@ -1,11 +1,11 @@
 package com.nuray.cpacexecution.cpacmodel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Agent {
     private List<Attribute> agentAttributes;
+    private Set<Attribute> agentAttributeSet;
+
 
     /*
     note that 'agentId' is not the same as 'agent_id' attribute.
@@ -46,7 +46,14 @@ public class Agent {
 
         userName.setAttributeValueCategorical(agentID);
 
-        agentAttributes=new ArrayList<>(Arrays.asList(new Attribute[]{userName,email,role,age}));
+        agentAttributeSet=new HashSet<>();
+
+//        agentAttributes=new ArrayList<>(Arrays.asList(new Attribute[]{userName,email,role,age}));
+        agentAttributes=new ArrayList<>();
+        addAgentAttribute(userName);
+        addAgentAttribute(email);
+        addAgentAttribute(role);
+        addAgentAttribute(age);
 
     }
 
@@ -113,5 +120,11 @@ public class Agent {
     public void addAgentAttribute(Attribute attribute)
     {
         agentAttributes.add(attribute);
+        agentAttributeSet.add(attribute);
+    }
+
+    public boolean hasAttribute(Attribute attribute)
+    {
+        return agentAttributeSet.contains(attribute);
     }
 }

@@ -276,6 +276,7 @@ public class CompleteGraph implements GraphInt {
                     }
 
                     varMatrix[i][j] = new VirtualAccessRequest(agentAttList,resourceAttList,actionToAttMap,operationalMode);
+//                    varMatrix[i][j].extractPermission(resourcebase);
                 }
                 if(edgeTypeMatrix[j][i].equalsIgnoreCase("action"))
                 {
@@ -306,6 +307,7 @@ public class CompleteGraph implements GraphInt {
                     }
 
                     varMatrix[j][i]= new VirtualAccessRequest(agentAttList,resourceAttList,actionToAttMap,operationalMode);
+//                    varMatrix[j][i].extractPermission(resourcebase);
                 }
             }
         }

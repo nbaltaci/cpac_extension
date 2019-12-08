@@ -35,23 +35,14 @@ public class Permission {
         Resource otherResource = other.resource;
         List<Action> actionList=this.actionList;
         List<Action> otherActionList=other.actionList;
-        boolean isEqualActionList=true;
-        if(actionList.size()!=otherActionList.size())
-        {
-            isEqualActionList=false;
-        }
-        else
-        {
-            for (Action action:actionList)
-            {
-                if(!otherActionList.contains(action))
-                {
-                    isEqualActionList=false;
-                }
-            }
-        }
 
-        return isEqualActionList&&(resource.equals(otherResource));
+        return resource.equals(otherResource) && actionList.equals(otherActionList);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return 13*resource.hashCode()*actionList.hashCode();
     }
 
     public int getPermissionId() {

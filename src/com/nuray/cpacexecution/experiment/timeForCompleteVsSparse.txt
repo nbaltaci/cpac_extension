@@ -1,0 +1,1 @@
+Average time when graph type= complete,sparse is NaN milliseconds 

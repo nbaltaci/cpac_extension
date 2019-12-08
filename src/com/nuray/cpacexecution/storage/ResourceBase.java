@@ -4,6 +4,7 @@ import com.nuray.cpacexecution.cpacmodel.Attribute;
 import com.nuray.cpacexecution.cpacmodel.Resource;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ResourceBase {
     private List<Resource> resourceList;
@@ -62,36 +63,43 @@ public class ResourceBase {
         List<Resource> result=new LinkedList<>();
         Iterator<Resource> resourceIterator = resourceList.iterator();
 
-        while (resourceIterator.hasNext())
+        if(attribute.isValueSet())
         {
-            Resource resource = resourceIterator.next();
-
-            List<Attribute> resourceAttributes=resource.getResourceAttributes();
-
-            for (Attribute resourceAtt:resourceAttributes)
-            {
-                if(resourceAtt.getAttributeName().equalsIgnoreCase(attribute.getAttributeName()))
-                {
-                    if(resourceAtt.isValueSet())
-                    {
-                        if(resourceAtt.getAttributeType().equalsIgnoreCase("categorical"))
-                        {
-                            if(resourceAtt.getAttributeValueCategorical().equalsIgnoreCase(attribute.getAttributeValueCategorical()))
-                            {
-                                result.add(resource);
-                            }
-                        }
-                        if(resourceAtt.getAttributeType().equalsIgnoreCase("numeric"))
-                        {
-                            if(resourceAtt.getAttributeValueNumeric()==attribute.getAttributeValueNumeric())
-                            {
-                                result.add(resource);
-                            }
-                        }
-                    }
-                }
-            }
+            return resourceMap.values()
+                    .stream()
+                    .filter(resource -> resource.hasAttribute(attribute))
+                    .collect(Collectors.toList());
         }
+//        while (resourceIterator.hasNext())
+//        {
+//            Resource resource = resourceIterator.next();
+//
+//            List<Attribute> resourceAttributes=resource.getResourceAttributes();
+//
+//            for (Attribute resourceAtt:resourceAttributes)
+//            {
+//                if(resourceAtt.getAttributeName().equalsIgnoreCase(attribute.getAttributeName()))
+//                {
+//                    if(resourceAtt.isValueSet())
+//                    {
+//                        if(resourceAtt.getAttributeType().equalsIgnoreCase("categorical"))
+//                        {
+//                            if(resourceAtt.getAttributeValueCategorical().equalsIgnoreCase(attribute.getAttributeValueCategorical()))
+//                            {
+//                                result.add(resource);
+//                            }
+//                        }
+//                        if(resourceAtt.getAttributeType().equalsIgnoreCase("numeric"))
+//                        {
+//                            if(resourceAtt.getAttributeValueNumeric()==attribute.getAttributeValueNumeric())
+//                            {
+//                                result.add(resource);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
         return result;
     }
 }

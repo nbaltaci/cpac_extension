@@ -4,6 +4,7 @@ import com.nuray.cpacexecution.cpacmodel.Action;
 import com.nuray.cpacexecution.cpacmodel.Attribute;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ActionBase {
 
@@ -60,36 +61,44 @@ public class ActionBase {
         List<Action> result=new LinkedList<>();
         Iterator<Action> actionIterator = actionList.iterator();
 
-        while (actionIterator.hasNext())
+        if(attribute.isValueSet())
         {
-            Action action = actionIterator.next();
-
-            List<Attribute> actionAttributes=action.getActionAttributes();
-
-            for (Attribute actionAtt:actionAttributes)
-            {
-                if(actionAtt.getAttributeName().equalsIgnoreCase(attribute.getAttributeName()))
-                {
-                    if(actionAtt.isValueSet())
-                    {
-                        if(actionAtt.getAttributeType().equalsIgnoreCase("categorical"))
-                        {
-                            if(actionAtt.getAttributeValueCategorical().equalsIgnoreCase(attribute.getAttributeValueCategorical()))
-                            {
-                                result.add(action);
-                            }
-                        }
-                        if(actionAtt.getAttributeType().equalsIgnoreCase("numeric"))
-                        {
-                            if(actionAtt.getAttributeValueNumeric()==attribute.getAttributeValueNumeric())
-                            {
-                                result.add(action);
-                            }
-                        }
-                    }
-                }
-            }
+            return actionMap.values()
+                    .stream()
+                    .filter(action -> action.hasAttribute(attribute))
+                    .collect(Collectors.toList());
         }
+
+//        while (actionIterator.hasNext())
+//        {
+//            Action action = actionIterator.next();
+//
+//            List<Attribute> actionAttributes=action.getActionAttributes();
+//
+//            for (Attribute actionAtt:actionAttributes)
+//            {
+//                if(actionAtt.getAttributeName().equalsIgnoreCase(attribute.getAttributeName()))
+//                {
+//                    if(actionAtt.isValueSet())
+//                    {
+//                        if(actionAtt.getAttributeType().equalsIgnoreCase("categorical"))
+//                        {
+//                            if(actionAtt.getAttributeValueCategorical().equalsIgnoreCase(attribute.getAttributeValueCategorical()))
+//                            {
+//                                result.add(action);
+//                            }
+//                        }
+//                        if(actionAtt.getAttributeType().equalsIgnoreCase("numeric"))
+//                        {
+//                            if(actionAtt.getAttributeValueNumeric()==attribute.getAttributeValueNumeric())
+//                            {
+//                                result.add(action);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
         return result;
     }
 

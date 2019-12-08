@@ -72,6 +72,19 @@ public class Attribute {
         return another.attributeName==this.attributeName;
     }
 
+    @Override
+    public int hashCode() {
+        if(attributeValueCategorical!=null)
+        {
+            return 13*attributeName.hashCode()*attributeType.hashCode()*attributeValueCategorical.hashCode();
+        }
+        else
+        {
+            return 13*attributeName.hashCode()*attributeType.hashCode()*Double.hashCode(attributeValueNumeric);
+        }
+
+    }
+
     public String getAttributeName()
     {
         return this.attributeName;
@@ -95,6 +108,14 @@ public class Attribute {
         return attributeValueNumeric;
     }
 
+    public double safeGetAttributeValueNumeric() {
+        try {
+            return getAttributeValueNumeric();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     public String getAttributeValueCategorical() throws Exception
     {
         if ((!isValueSet()))
@@ -102,6 +123,14 @@ public class Attribute {
             throw new Exception("set attribute value first!");
         }
         return attributeValueCategorical;
+    }
+
+    public String safeGetAttributeValueCategorical() {
+        try {
+            return getAttributeValueCategorical();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage(),ex);
+        }
     }
 
     public Date getAttributeValDate()

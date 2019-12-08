@@ -60,6 +60,12 @@ public abstract class Request {
         return this.permission;
     }
 
+    public void setPermission(ResourceBase resourceBase) throws Exception
+    {
+        Permission permission = extractPermission(resourceBase);
+        this.permission= permission;
+    }
+
     public String getOperationalMode()
     {
         return operationalMode;
@@ -91,6 +97,8 @@ public abstract class Request {
             actionsInPermission.add(action);
         }
         Permission permission=new Permission(resource,actionsInPermission);
+
+        this.permission=permission;
 
         return permission;
     }

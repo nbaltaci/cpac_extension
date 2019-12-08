@@ -11,9 +11,13 @@ import com.nuray.gagm.experiment.Sparse;
 import com.nuray.gagm.pathfinder.*;
 import org.w3c.dom.Attr;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.net.URL;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
-public class Experiment
+public class ExperimentRiskValues
 {
 
     private static ResourceBase resourceBase;
@@ -24,8 +28,16 @@ public class Experiment
 
     public static void main(String args[]) throws Exception {
 
-        experimentRiskValues(50);
+//        experimentRiskValues(50);
+//
+        for(int i=1;i<4; i++)
+        {
+            int nSoDRules=i*10;
+            System.out.println("NOW PRINTING FOR "+nSoDRules+" sod policy rules");
+            experimentRiskValues(100,nSoDRules);
+        }
 //        experimentRiskValuesConstantGraph(10);
+
 
 
     }
@@ -59,7 +71,7 @@ public class Experiment
                 int nEligibleAgents=solveWithGeneration(50,5,
                         50,5,
                         5,
-                        2,risk,risk+riskIncreaseStep,
+                        10,risk,risk+riskIncreaseStep,
                         "sparse","emergency",
                         100,1,100, 0.5,
                         1,5,1,5,
@@ -80,6 +92,39 @@ public class Experiment
 //        return eligibleAgentsAtEachRun;
     }
 
+    private static void experimentRiskValues(int nIterations, int nSoDRules) throws Exception
+    {
+        int riskIncreaseStep=10;
+        for(int risk=1;risk<100;risk=risk+riskIncreaseStep)
+        {
+            int count=0;
+//        int[] eligibleAgentsAtEachRun=new int[nIterations];
+            int totalEligibleAgents=0;
+            while (count<nIterations)
+            {
+
+                int nEligibleAgents=solveWithGeneration(50,5,
+                        50,5,
+                        5,
+                        nSoDRules,risk,risk+riskIncreaseStep,
+                        "sparse","emergency",
+                        100,1,100, 0.5,
+                        1,5,1,5,
+                        1,1,
+                        1,5);
+
+                if(nEligibleAgents>=0)
+                {
+                    count++;
+                    totalEligibleAgents+=nEligibleAgents;
+                }
+            }
+            double avgEligibleAgents=(double) totalEligibleAgents/nIterations;
+            System.out.println("Risk values for sod rules changes between "+risk+" and "+(risk+riskIncreaseStep));
+            System.out.println("Average number of eligible agents: "+avgEligibleAgents);
+        }
+
+    }
     /*
         THIS METHOD DOES NOT WORK AS DESIRED (IT WORKS CORRECTLY BUT TAKES SO LONG TIME TO COMPLETE FOR A REASON THAT I
         COULD NOT FIGURE OUT EVEN THOUGH I DEBUGGED AND TRIED MANY DIFFERENT SOLUTIONS.), SO I NEED TO GENERATE A GRAPH
@@ -223,11 +268,16 @@ public class Experiment
         // 4. call executeCPAC algorithm
         ExecutionOfCPAC executionOfCPAC=new ExecutionOfCPAC(resourceBase,actionBase,agentBase,policyBase,sodBase);
 
+        Date date=new Date();
+
             // 4.a. generate a random graph
         // when "finalStates" is passed as null, Graph class randomly generates final states
         Graph graph = generateRandomGraph(graphType,operationalMode,numberOfVertices,
                 riskLower,riskUpper, fraction,nAgentAttLower,nAgentAttUpper,nResAttLower,nResAttUpper,
                 nActionAttLower,nActionAttUpper,nActionsLower,nActionsUpper,null);
+
+        Date date2=new Date();
+//        System.out.println("Time for graph generation: "+(date2.getTime()-date.getTime()));
 
             // 4.b. generate random start and target vertex
         Random random=new Random(1,graph.getNumberOfVertices());
@@ -238,6 +288,9 @@ public class Experiment
 
         Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>> varList_v_cur =
                 generateVarListForExperiment(graph,startVertexNo,targetVertexNo);
+        Date date3=new Date();
+//        System.out.println("Time for varList generation (shortest path computation): "+(date3.getTime()-date2.getTime()));
+
 
 
         Vertex v_cur=null;
@@ -273,7 +326,7 @@ public class Experiment
 
             // 4.h. call executeCPAC() method
 
-            List<Agent> agentList = executionOfCPAC.executeCPAC(null, varList_v_cur, operationalMode, v_cur,v_next);
+            List<Agent> agentList = executionOfCPAC.executeCPAC(null, varList_v_cur, operationalMode, v_cur,v_next,vars);
             return agentList.size();
         }
         else
@@ -283,11 +336,43 @@ public class Experiment
 
     }
 
+    /**
+     * This method calculates the time taken by a single run of executeCPAC() method. Note that this method is called inside
+     * experimentTimePerformance() method and consumes already generated policy elements, policies and graph/varList by it.
+     * So, if we need to change the size of the graph/ policy element sets/ policies, we need to change the parameters of
+     * the experimentTimePerformance() method.
+     *
+     * @param executionOfCPAC should be generated inside experimentTimePerformance() method using the generated agentBase,
+     *                        resourceBase, actionBase, policyBase, and sodBase
+     * @param varList_v_cur should be generated inside experimentTimePerformance() method
+     * @param operationalMode
+     * @param v_cur should be generated inside experimentTimePerformance() method
+     * @param v_next should be generated inside experimentTimePerformance() method
+     * @return time taken to run the executeCPAC() method for one time
+     * @throws Exception
+     */
+    private static long solveForTimePerformance(ExecutionOfCPAC executionOfCPAC,
+                                                Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>> varList_v_cur,
+                                                String operationalMode,
+                                                Vertex v_cur,
+                                                Vertex v_next,
+                                                VirtualAccessRequest[] vars) throws Exception
+    {
+
+        long startTime=System.nanoTime();
+        List<Agent> agentList = executionOfCPAC.executeCPAC(null, varList_v_cur, operationalMode, v_cur,v_next,vars);
+        long endTime=System.nanoTime();
+
+        long timeDiff = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+
+        return timeDiff;
+    }
+
 
     /**
-     * Different than solveRiskValues method, this method takes a randomly generated varList_v_cur (from a randomly generated
-     * graph) and calls executeCPAC method on this varList_v_cur. The purpose of this is to keep the graph constant across
-     * different experiments for different risk values.
+     * Different than solveWithGeneration method, this method takes a randomly generated varList_v_cur (from a randomly
+     * generated graph) and calls executeCPAC method on this varList_v_cur. The purpose of this is to keep the graph
+     * constant across different experiments for different risk values.
      *
      * @param nSoDRules
      * @param riskLowLimit
@@ -328,8 +413,7 @@ public class Experiment
 
             // 4.h. call executeCPAC() method
 
-            List<Agent> agentList = new LinkedList<>();
-                    agentList=executionOfCPAC.executeCPAC(null, varList_v_cur, operationalMode, v_cur,v_next);
+            List<Agent> agentList=executionOfCPAC.executeCPAC(null, varList_v_cur, operationalMode, v_cur,v_next,vars);
             return agentList.size();
         }
         else
@@ -339,20 +423,7 @@ public class Experiment
 
     }
 
-    private static void solveForTimePerformance(int nResources, int nResAttributes,
-                                                int nAgents, int nAgentAttributes,
-                                                int nActions,
-                                                int nSoDRules, int riskLowLimit, int riskUpperLimit,
-                                                Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>> varList_v_cur,
-                                                Vertex v_cur,
-                                                String operationalMode) throws Exception
-    {
-        generatePolicyElements(nResources,nResAttributes, nAgents,nAgentAttributes, nActions);
 
-        // 4. call executeCPAC algorithm
-        ExecutionOfCPAC executionOfCPAC=new ExecutionOfCPAC(resourceBase,actionBase,agentBase,policyBase,sodBase);
-
-    }
 
     private static void generatePolicyElements(int nResources, int nResAttributes,
                                                int nAgents, int nAgentAttributes,
@@ -553,7 +624,8 @@ public class Experiment
             String ruleEffect="Permit";
             PolicyRule policyRule=new PolicyRule(resourceAttMatchFuncListMap,agentAttMatchFuncListMap,
                     actionAttMatchFuncListMap,null,
-                    operationalMode,"sample-CPAC-policy-rule"+(i+1),ruleEffect);
+                    operationalMode,"sample-CPAC-policy-rule"+(i+1),ruleEffect,
+                    resourceBase,actionBase);
 
             rules.add(policyRule);
         }
@@ -632,7 +704,8 @@ public class Experiment
                     String ruleEffect="Permit";
                     PolicyRule policyRule=new PolicyRule(resourceAttMatchFuncListMap,agentAttMatchFuncListMap,
                             actionAttMatchFuncListMap,null,
-                            operationalMode,"sample-CPAC-policy-rule"+ruleCounter,ruleEffect);
+                            operationalMode,"sample-CPAC-policy-rule"+ruleCounter,ruleEffect,
+                            resourceBase,actionBase);
 
                     rules.add(policyRule);
                 }
@@ -800,7 +873,7 @@ public class Experiment
 
             // generate a random risk value for the SoD rule
             double risk = random4.doubleRandomInclusive(lowerRiskLimit, upperRiskLimit);
-            SODPolicyRule sodPolicyRule=new SODPolicyRule(permissionList,k,risk);
+            SODPolicyRule sodPolicyRule=new SODPolicyRule(permissionList,k,risk,policyBase,agentBase);
             sodPolicy.addSoDPolicyRule(sodPolicyRule);
         }
         return sodPolicy;
@@ -900,7 +973,7 @@ public class Experiment
 
             // generate a random risk value for the SoD rule
             double risk = random4.doubleRandomInclusive(lowerRiskLimit, upperRiskLimit);
-            SODPolicyRule sodPolicyRule=new SODPolicyRule(permissionList,k,risk);
+            SODPolicyRule sodPolicyRule=new SODPolicyRule(permissionList,k,risk,policyBase,agentBase);
             sodPolicy.addSoDPolicyRule(sodPolicyRule);
         }
         return sodPolicy;

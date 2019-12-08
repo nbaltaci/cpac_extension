@@ -1,12 +1,11 @@
 package com.nuray.cpacexecution.cpacmodel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Action {
 
     private List<Attribute> actionAttributes;
+    private Set<Attribute> actionAttributeSet;
     /*
     note that 'actionId' is not the same as 'action_id' attribute.
     'actionId' is an int that is simply used to identify the count of attribute whereas
@@ -38,7 +37,13 @@ public class Action {
 
         actionName=new Attribute("actionID",null,"categorical");
         actionName.setAttributeValueCategorical(actionID);
-        actionAttributes=new ArrayList<>(Arrays.asList(new Attribute[]{actionName}));
+
+        actionAttributeSet=new HashSet<>();
+
+//        actionAttributes=new ArrayList<>(Arrays.asList(new Attribute[]{actionName}));
+
+        actionAttributes=new ArrayList<>();
+        addActionAttribute(actionName);
     }
 
     @Override
@@ -64,4 +69,16 @@ public class Action {
     {
         return actionAttributes;
     }
+
+    public void addActionAttribute(Attribute attribute)
+    {
+        actionAttributes.add(attribute);
+        actionAttributeSet.add(attribute);
+    }
+
+    public boolean hasAttribute(Attribute attribute)
+    {
+        return actionAttributeSet.contains(attribute);
+    }
+
 }

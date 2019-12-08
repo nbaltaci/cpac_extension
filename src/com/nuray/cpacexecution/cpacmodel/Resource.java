@@ -1,11 +1,10 @@
 package com.nuray.cpacexecution.cpacmodel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Resource {
     private List<Attribute> resourceAttributes;
+    private Set<Attribute> resourceAttributeSet;
 
     /*
     note that 'resourceId' is not the same as 'resource_id' attribute.
@@ -38,7 +37,13 @@ public class Resource {
 
         resourceName=new Attribute("resourceID",null,"categorical");
         resourceName.setAttributeValueCategorical(resourceID);
-        resourceAttributes=new ArrayList<>(Arrays.asList(new Attribute[]{resourceName}));
+
+        resourceAttributeSet=new HashSet<>();
+
+//        resourceAttributes=new ArrayList<>(Arrays.asList(new Attribute[]{resourceName}));
+
+        resourceAttributes=new ArrayList<>();
+        addResourceAttribute(resourceName);
     }
 
     @Override
@@ -79,5 +84,11 @@ public class Resource {
     public void addResourceAttribute(Attribute attribute)
     {
         resourceAttributes.add(attribute);
+        resourceAttributeSet.add(attribute);
+    }
+
+    public boolean hasAttribute(Attribute attribute)
+    {
+        return resourceAttributeSet.contains(attribute);
     }
 }

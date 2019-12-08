@@ -2,33 +2,42 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dd8c35c9-09c2-4ade-a2a8-804ce39981d8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/Experiment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/ExecutionOfCPAC_MERVersion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/ExperimentTimePerformance.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/test/MERTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/ExecutionOfCPAC.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/ExecutionOfCPAC.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Action.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Action.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Agent.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Agent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/CPACSpecifications.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/CPACSpecifications.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Attribute.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Attribute.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Resource.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/cpacmodel/Resource.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/Permission.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/Permission.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/PolicyRule.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/PolicyRule.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/Request.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/Request.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/SODPolicyRule.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/enforcementfunctions/SODPolicyRule.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/experiment/Experiment.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/storage/ActionBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/storage/ActionBase.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/storage/AgentBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/storage/AgentBase.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/storage/ResourceBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/storage/ResourceBase.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/cpacexecution/test/Test.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/experiment/CompleteGraph.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/experiment/CompleteGraph.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/experiment/Random.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/experiment/Random.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/experiment/Sparse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/experiment/Sparse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/pathfinder/Graph.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/pathfinder/Graph.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/pathfinder/VARGenerationMultipleShortestPathVersion.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/pathfinder/VARGenerationMultipleShortestPathVersion.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CPACExecution/com/nuray/gagm/test/Test.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/ExecutionOfCPAC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/ExecutionOfCPAC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Action.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Action.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Agent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/CPACSpecifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/CPACSpecifications.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Attribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Attribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Resource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/Permission.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/PolicyRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/PolicyRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/Request.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/SODPolicyRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/enforcementfunctions/SODPolicyRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/Experiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/ExperimentRiskValues.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/storage/ActionBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/storage/ActionBase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/storage/AgentBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/storage/AgentBase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/storage/ResourceBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/storage/ResourceBase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/nuray/cpacexecution/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/cpacexecution/test/Test.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/nuray/gagm/experiment/CompleteGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/gagm/experiment/CompleteGraph.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/gagm/experiment/Random.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/gagm/experiment/Random.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/nuray/gagm/experiment/Sparse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/gagm/experiment/Sparse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/gagm/pathfinder/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/gagm/pathfinder/Graph.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/gagm/pathfinder/VARGenerationMultipleShortestPathVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/gagm/pathfinder/VARGenerationMultipleShortestPathVersion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/nuray/gagm/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/nuray/gagm/test/Test.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -74,11 +83,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.nuray.cpacexecution.experiment" />
       <recent name="com.nuray.gagm.test" />
       <recent name="com.nuray.gagm.experiment" />
       <recent name="com.nuray.cpacexecution" />
       <recent name="com.nuray.cpacexecution.enforcementfunctions" />
-      <recent name="com.nuray.cpacexecution.cpacmodel" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
@@ -100,13 +109,52 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Experiment">
-    <configuration name="Experiment" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.nuray.cpacexecution.experiment.Experiment" />
+  <component name="RunManager" selected="Application.ExperimentTimePerformance">
+    <configuration name="ExperimentRiskValues" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.nuray.cpacexecution.experiment.ExperimentRiskValues" />
       <module name="CPACExecution" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.nuray.cpacexecution.experiment.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ExperimentTimePerformance" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.nuray.cpacexecution.experiment.ExperimentTimePerformance" />
+      <module name="CPACExecution" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.nuray.cpacexecution.experiment.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MERTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.nuray.cpacexecution.test.MERTest" />
+      <module name="CPACExecution" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.nuray.cpacexecution.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SimpleTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.nuray.cpacexecution.test.SimpleTest" />
+      <module name="CPACExecution" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.nuray.cpacexecution.test.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -128,19 +176,6 @@
       </method>
     </configuration>
     <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.nuray.gagm.test.Test" />
-      <module name="CPACExecution" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.nuray.gagm.test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.nuray.cpacexecution.test.Test" />
       <module name="CPACExecution" />
       <method v="2">
@@ -149,10 +184,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Experiment" />
-        <item itemvalue="Application.Test" />
+        <item itemvalue="Application.ExperimentTimePerformance" />
+        <item itemvalue="Application.SimpleTest" />
+        <item itemvalue="Application.ExperimentRiskValues" />
+        <item itemvalue="Application.MERTest" />
         <item itemvalue="Application.Test (1)" />
-        <item itemvalue="Application.Test" />
       </list>
     </recent_temporary>
   </component>
@@ -174,7 +210,9 @@
       <workItem from="1571706381003" duration="541000" />
       <workItem from="1571710720502" duration="2960000" />
       <workItem from="1571754725884" duration="101902000" />
-      <workItem from="1572546609690" duration="118815000" />
+      <workItem from="1572546609690" duration="129148000" />
+      <workItem from="1573655696095" duration="182000" />
+      <workItem from="1573655921580" duration="159586000" />
     </task>
     <servers />
   </component>
@@ -269,22 +307,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/ExecutionOfCPAC.java</url>
-          <line>524</line>
+          <line>615</line>
           <option name="timeStamp" value="125" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Attribute.java</url>
-          <line>101</line>
-          <option name="timeStamp" value="131" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/ExecutionOfCPAC.java</url>
-          <line>53</line>
-          <option name="timeStamp" value="134" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/ExecutionOfCPAC.java</url>
-          <line>529</line>
+          <line>620</line>
           <option name="timeStamp" value="149" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -318,29 +346,84 @@
           <option name="timeStamp" value="194" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/Experiment.java</url>
-          <line>330</line>
-          <option name="timeStamp" value="293" />
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/test/Test.java</url>
+          <line>25</line>
+          <option name="timeStamp" value="300" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/Experiment.java</url>
-          <line>307</line>
-          <option name="timeStamp" value="295" />
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/test/Test.java</url>
+          <line>156</line>
+          <option name="timeStamp" value="301" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/Experiment.java</url>
-          <line>270</line>
-          <option name="timeStamp" value="297" />
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Attribute.java</url>
+          <line>131</line>
+          <option name="timeStamp" value="325" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/Experiment.java</url>
-          <line>52</line>
-          <option name="timeStamp" value="298" />
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/cpacmodel/Attribute.java</url>
+          <line>114</line>
+          <option name="timeStamp" value="326" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/Experiment.java</url>
-          <line>58</line>
-          <option name="timeStamp" value="299" />
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/test/Test.java</url>
+          <line>28</line>
+          <option name="timeStamp" value="332" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/test/MERTest.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="333" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/test/MERTest.java</url>
+          <line>100</line>
+          <option name="timeStamp" value="334" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/test/MERTest.java</url>
+          <line>218</line>
+          <option name="timeStamp" value="335" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/test/MERTest.java</url>
+          <line>443</line>
+          <option name="timeStamp" value="336" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/ExperimentTimePerformance.java</url>
+          <line>1222</line>
+          <option name="timeStamp" value="347" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/ExperimentTimePerformance.java</url>
+          <line>1069</line>
+          <option name="timeStamp" value="348" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/ExperimentTimePerformance.java</url>
+          <line>1417</line>
+          <option name="timeStamp" value="350" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/ExperimentTimePerformance.java</url>
+          <line>1239</line>
+          <option name="timeStamp" value="351" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/ExperimentTimePerformance.java</url>
+          <line>1218</line>
+          <option name="timeStamp" value="352" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/ExperimentTimePerformance.java</url>
+          <line>1238</line>
+          <option name="timeStamp" value="353" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/nuray/cpacexecution/experiment/ExperimentTimePerformance.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="357" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

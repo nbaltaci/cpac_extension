@@ -18,12 +18,11 @@ import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
 
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public class ExecutionOfCPAC {
+public class ExecutionOfCPAC_MERVersion {
 
     private ResourceBase resourceBase;
     private ActionBase actionBase;
@@ -37,14 +36,12 @@ public class ExecutionOfCPAC {
     EntitlementPolicyAdminServiceStub EPASadminStub;
 //    RemoteUserStoreManagerServiceStub RUSMSadminStub;
 
-//    public Map<String,Long> methodRunningTimes;
 
-
-    public ExecutionOfCPAC(ResourceBase resourceBase,
-                           ActionBase actionBase,
-                           AgentBase agentBase,
-                           PolicyBase policyBase,
-                           SODBase sodBase) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException, EntitlementServiceException {
+    public ExecutionOfCPAC_MERVersion(ResourceBase resourceBase,
+                                      ActionBase actionBase,
+                                      AgentBase agentBase,
+                                      PolicyBase policyBase,
+                                      SODBase sodBase) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException, EntitlementServiceException {
 
         this.resourceBase=resourceBase;
         this.actionBase=actionBase;
@@ -62,8 +59,6 @@ public class ExecutionOfCPAC {
         //publish SOD policies to PAP here...
         List<SODPolicy> sodPolicyList = sodBase.getSODPolicyList();
         publishSODPolicies(sodPolicyList);
-
-//        methodRunningTimes=new HashMap<>();
 
     }
 
@@ -114,9 +109,7 @@ public class ExecutionOfCPAC {
             }
 
             //  line 7: Extract perm_var from var_v_cur
-//            Permission perm_var=var_v_cur.extractPermission(resourceBase);
-            Permission perm_var=var_v_cur.getPermission();
-
+            Permission perm_var=var_v_cur.extractPermission(resourceBase);
 
             //  line 8: check applicable sod policies to perm_var
             List<SODPolicyRule> applicableSoDs=checkApplicableSoDPolicies(perm_var);
@@ -128,31 +121,33 @@ public class ExecutionOfCPAC {
             {
                 for (SODPolicyRule sod:applicableSoDs)  //  line 10
                 {
-                    for (Agent agent:agentList_v_cur)   //  line 11
+                    Set<SODPolicyRule.MERConstraint> MERSet = sod.getMERSet();
+                    if (MERSet!=null)
                     {
-                        List<Permission> validPerms=computeValidSetForAgent(agent);
-                        if(!validPerms.contains(perm_var))
+                        for (SODPolicyRule.MERConstraint merConstraint:MERSet)
                         {
-                            validPerms.add(perm_var);
-                        }
-                        List<Permission> unsafePermissions=intersectPermissionLists(validPerms,sod.getPerm());
+                            for (Agent agent:agentList_v_cur)
+                            {
+                                List<PolicyRule> validPolicyRules=computeValidSetForAgent(merConstraint,agent);
 
-                        if(unsafePermissions.size()>=sod.getK())    //  line 12
-                        {
-                            if(m_cur.equalsIgnoreCase("emergency"))     //  line 13
-                            {
-                                if(v_next==null)
+                                if (validPolicyRules.size()>merConstraint.getM())
                                 {
-                                    System.out.println("v_next is null!");
+                                    if(m_cur.equalsIgnoreCase("emergency"))     //  line 13
+                                    {
+                                        if(v_next==null)
+                                        {
+                                            System.out.println("v_next is null!");
+                                        }
+                                        else if(sod.getRiskOfSoDPolicy()>(Math.abs(v_cur.getRisk()-v_next.getRisk())))   //  line 14
+                                        {
+                                            tempListForEligibleAgents.remove(agent);      //  line 15
+                                        }
+                                    }
+                                    else
+                                    {
+                                        tempListForEligibleAgents.remove(agent);
+                                    }
                                 }
-                                else if(sod.getRiskOfSoDPolicy()>(Math.abs(v_cur.getRisk()-v_next.getRisk())))   //  line 14
-                                {
-                                    tempListForEligibleAgents.remove(agent);      //  line 15
-                                }
-                            }
-                            else       //   line 16
-                            {
-                                tempListForEligibleAgents.remove(agent);      //  line 17
                             }
                         }
                     }
@@ -184,26 +179,26 @@ public class ExecutionOfCPAC {
             {
                 for (SODPolicyRule sod:applicableSoDs)  //  line 24
                 {
-                    List<Permission> validPerms=computeValidSetForAgent(agent);
-                    if(!validPerms.contains(perm_iar))
-                    {
-                        validPerms.add(perm_iar);
-                    }
-                    List<Permission> unsafePermissions=intersectPermissionLists(validPerms,sod.getPerm());
+                    Set<SODPolicyRule.MERConstraint> MERSet = sod.getMERSet();
 
-                    if(unsafePermissions.size()>=sod.getK())    //  line 25
+                    for (SODPolicyRule.MERConstraint merConstraint:MERSet)
                     {
-                        if(m_cur.equalsIgnoreCase("emergency"))     //  line 26
+                        List<PolicyRule> validPolicyRules=computeValidSetForAgent(merConstraint,agent);
+
+                        if (validPolicyRules.size()>merConstraint.getM())
                         {
-                            if(sod.getRiskOfSoDPolicy()<=(Math.abs(v_cur.getRisk()-v_next.getRisk())))   //  line 27
+                            if(m_cur.equalsIgnoreCase("emergency"))     //  line 13
                             {
-                                authorizedAgent = evaluate(iar, m_cur);//  line 28
+                                if(sod.getRiskOfSoDPolicy()<=(Math.abs(v_cur.getRisk()-v_next.getRisk())))   //  line 14
+                                {
+                                    authorizedAgent = evaluate(iar, m_cur);//  line 28
+                                }
                             }
                         }
-                    }
-                    else // line 29
-                    {
-                        authorizedAgent=evaluate(iar,m_cur); // line 30
+                        else
+                        {
+                            authorizedAgent = evaluate(iar, m_cur);//  line 28
+                        }
                     }
                 }
             }
@@ -221,10 +216,54 @@ public class ExecutionOfCPAC {
 
     }
 
+    private boolean checkMEPSet(Set<SODPolicyRule.MERConstraint> MERSet, List<Agent> agentList_v_cur)
+    {
+        boolean flag=true;
+        for (SODPolicyRule.MERConstraint merConstraint:MERSet)
+        {
+            flag=check_MEP(merConstraint,agentList_v_cur);
+            if (flag==false)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean check_MEP(SODPolicyRule.MERConstraint merConstraint,List<Agent> agentList_v_cur)
+    {
+        for (Agent agent:agentList_v_cur)
+        {
+            List<PolicyRule> validPolicyRules= find_valid_set(merConstraint,agent);
+
+            if (validPolicyRules.size()>merConstraint.getM())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private List<PolicyRule> find_valid_set(SODPolicyRule.MERConstraint merConstraint, Agent agent)
+    {
+        Set<PolicyRule> merConstraintPolicyRules = merConstraint.getPolicyRules();
+
+        List<PolicyRule> validPolicyRules = merConstraintPolicyRules
+                .stream()
+                .filter(policyRule -> policyRule.getRuleEffect().equalsIgnoreCase("permit"))
+                .filter(policyRule ->
+                        policyRule.getAgentAttributes().values()
+                                .stream()
+                                .flatMap(agentAttributeGroup ->
+                                        agentAttributeGroup.stream()
+                                                .flatMap(agentAttribute -> agentAttribute.keySet().stream()))
+                                .allMatch(policyRuleAttribute -> agent.hasAttribute(policyRuleAttribute))).collect(Collectors.toList());
+
+        return validPolicyRules;
+    }
+
     public VirtualAccessRequest[] extractVars(Queue<Map<Vertex,Queue<Map<Edge, VirtualAccessRequest>>>> varList_v_cur, Vertex startVertex) throws Exception
     {
-//        long startTime=System.nanoTime();
-
         // line 3: Extract var for the current and next state from varList_v_cur
         VirtualAccessRequest var_v_cur = null;
         VirtualAccessRequest var_v_next = null;
@@ -275,9 +314,6 @@ public class ExecutionOfCPAC {
         vars[0]=var_v_cur;
         vars[1]=var_v_next;
 
-//        long endTime=System.nanoTime();
-//        long timeDiff = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
-//        methodRunningTimes.put("extractVars",timeDiff);
         return vars;
     }
 
@@ -344,7 +380,10 @@ public class ExecutionOfCPAC {
 
     private List<Agent> queryEligibleAgents(List<Attribute> attributes) throws Exception {
 
-//        long startTime=System.nanoTime();
+        Date date=new Date();
+
+
+
 
         List<Agent> existingEligibleAgents=new ArrayList<>();
         for (Attribute attribute:attributes)
@@ -359,15 +398,15 @@ public class ExecutionOfCPAC {
                 existingEligibleAgents =intersectAgentLists(existingEligibleAgents,agentsWithAttributeValue);
             }
         }
-
-//        long endTime=System.nanoTime();
-//        long timeDiff = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
-//        methodRunningTimes.put("queryEligibleAgents",timeDiff);
-
+        Date date2=new Date();
+//        System.out.println("Time for queryEligibleAgents() is: "+(date2.getTime()-date.getTime()));
         return existingEligibleAgents;
     }
 
     private List<Agent> intersectAgentLists(List<Agent> agentList1, List<Agent> agentList2) {
+        Date date=new Date();
+
+
         List<Agent> intersection = new LinkedList<>();
 
         for(Agent agent : agentList1) {
@@ -379,6 +418,10 @@ public class ExecutionOfCPAC {
                 }
             }
         }
+
+        Date date2=new Date();
+//        System.out.println("Time for intersectAgentLists() is: "+(date2.getTime()-date.getTime()));
+
         return intersection;
     }
 
@@ -388,15 +431,12 @@ public class ExecutionOfCPAC {
      * @param agent
      * @throws Exception
      */
-    private List<Permission> computeValidSetForAgent(Agent agent) throws Exception
+    private List<PolicyRule> computeValidSetForAgent(SODPolicyRule.MERConstraint merConstraint, Agent agent) throws Exception
     {
-//        long startTime=System.nanoTime();
+        Set<PolicyRule> merConstraintPolicyRules = merConstraint.getPolicyRules();
 
-        List<Policy> policyList = policyBase.getPolicyList();
-
-//        List<PolicyRule> policyRulesWithPermit = policyBase.getPolicyList()
+//        List<PolicyRule> policyRulesWithPermit = merConstraintPolicyRules
 //                .stream()
-//                .flatMap(pol -> pol.getPolicyRules().stream())
 //                .filter(policyRule -> policyRule.getRuleEffect().equalsIgnoreCase("permit"))
 //                .collect(Collectors.toList());
 //
@@ -410,9 +450,8 @@ public class ExecutionOfCPAC {
 //                                                .flatMap(agentAttribute -> agentAttribute.keySet().stream()))
 //                                .allMatch(policyRuleAttribute -> agent.hasAttribute(policyRuleAttribute))).collect(Collectors.toList());
 
-        List<PolicyRule> validPolicyRules = policyBase.getPolicyList()
+        List<PolicyRule> validPolicyRules = merConstraintPolicyRules
                 .stream()
-                .flatMap(pol -> pol.getPolicyRules().stream())
                 .filter(policyRule -> policyRule.getRuleEffect().equalsIgnoreCase("permit"))
                 .filter(policyRule ->
                         policyRule.getAgentAttributes().values()
@@ -422,109 +461,12 @@ public class ExecutionOfCPAC {
                                                 .flatMap(agentAttribute -> agentAttribute.keySet().stream()))
                                 .allMatch(policyRuleAttribute -> agent.hasAttribute(policyRuleAttribute))).collect(Collectors.toList());
 
-
-        List<Permission> permissionList = validPolicyRules.stream()
-                .flatMap(validPolicyRule -> {
-                    try {
-                        return validPolicyRule.getPermissionsFromRule().stream();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return Stream.empty();
-                    }
-                }).distinct().collect(Collectors.toList());
-
-//        long endTime=System.nanoTime();
-//        long timeDiff = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
-//        methodRunningTimes.put("computeValidSetForAgent",timeDiff);
-
-        return permissionList;
-
-
-
-
-
-//        if(policyList.isEmpty())
-//        {
-//            throw new Exception("You have not recorded any policy, so you cannot perform this operation.");
-//        }
-//
-//        List<Permission> permissionsApplicableToAgent=new ArrayList<>();
-//
-//        for (Policy policy:policyList)
-//        {
-//            List<PolicyRule> policyRules = policy.getPolicyRules();
-//
-//            List<Permission> permissionsFromPolicy=new ArrayList<>();
-//
-//            for (PolicyRule policyRule:policyRules)
-//            {
-//                List<Permission> permissionsFromRule=new ArrayList<>();
-//
-//                //check only policy rules that have "permit" effects (positive authorizations)
-//                if (policyRule.getRuleEffect().equalsIgnoreCase("permit"))
-//                {
-//                    Map<String, List<Map<Attribute, String>>> agentAttributeMap = policyRule.getAgentAttributes();
-//                    Iterator<String> iterator = agentAttributeMap.keySet().iterator(); //here we iterate through agent groups,
-//                    // i.e. <Subject></Subject> groups in XACML file
-//
-//                    while (iterator.hasNext())
-//                    {
-//                        String agentGroupInPolicyRule = iterator.next();
-//                        List<Map<Attribute, String>> agentAttMatchFunctionMaps = agentAttributeMap.get(agentGroupInPolicyRule);
-//
-//                        boolean agentHasAllAttsForRule=true;
-//
-//                        for (Map<Attribute,String> agentAttMFMap:agentAttMatchFunctionMaps)
-//                        {
-//                            Attribute attribute = agentAttMFMap.keySet().iterator().next();// the map here is a single-element map
-//                            // (a single agent att and an attribute matching function, so we only get a single element using "next" method
-//
-//                            List<Agent> agentsWithAttributeValue = agentBase.getAgentsWithAttributeValue(attribute);
-//                            if(!agentsWithAttributeValue.contains(agent))
-//                            {
-//                                agentHasAllAttsForRule=false;
-//                            }
-//
-////                            String attributeName = attribute.getAttributeName();
-////
-////                            if(attributeName.equalsIgnoreCase("agentID"))
-////                            {
-////                                String agentIDValInPolicyRule = attribute.getAttributeValueCategorical();
-////                                String realAgentID=agent.getUserName().getAttributeValueCategorical();
-////
-////                                if(agentIDValInPolicyRule.equalsIgnoreCase(realAgentID))
-////                                {
-////                                    permissionsFromRule = policyRule.getPermissionsFromRule(resourceBase, actionBase);
-////                                    permissionsFromPolicy.addAll(permissionsFromRule);
-////                                }
-////                            }
-//                        }
-//                        if(agentHasAllAttsForRule)
-//                        {
-//                            permissionsFromRule = policyRule.getPermissionsFromRule(resourceBase, actionBase);
-//                            for (Permission permission:permissionsFromRule)
-//                            {
-//                                if (!permissionsFromPolicy.contains(permission))
-//                                {
-//                                    permissionsFromPolicy.add(permission);
-//                                }
-//                            }
-//
-//                        }
-//                    }
-//                }
-//            }
-//
-//            permissionsApplicableToAgent.addAll(permissionsFromPolicy);
-//        }
-
-
-//        return permissionsApplicableToAgent;
+        return validPolicyRules;
     }
 
     private List<SODPolicyRule> checkApplicableSoDPolicies(Permission permission)
     {
-//        long startTime=System.nanoTime();
+        Date date=new Date();
 
         List<SODPolicyRule> applicableSODPolicyRules=new ArrayList<>();
         List<SODPolicy> sodPolicyList = sodBase.getSODPolicyList();
@@ -559,16 +501,16 @@ public class ExecutionOfCPAC {
             }
         }
 
-//        long endTime=System.nanoTime();
-//        long timeDiff = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
-//        methodRunningTimes.put("checkApplicableSoDPolicies",timeDiff);
+        Date date2=new Date();
+
+//        System.out.println("Time for checkApplicableSoDPolicies() is: "+(date2.getTime()-date.getTime()));
 
         return applicableSODPolicyRules;
     }
 
     private List<Permission> intersectPermissionLists(List<Permission> permissionList1, List<Permission> permissionList2)
     {
-//        long startTime=System.nanoTime();
+        Date date=new Date();
 
         List<Permission> intersection = new LinkedList<>();
 
@@ -580,18 +522,14 @@ public class ExecutionOfCPAC {
                 {
                     List<Action> perm1ActionList = perm1.getActionList();
                     boolean allActionsIncluded=true;
-                    if(!perm2.getActionList().containsAll(perm1ActionList))
+                    for (Action action:perm1ActionList)
                     {
-                        allActionsIncluded=false;
+                        if(!perm2.getActionList().contains(action))
+                        {
+                            allActionsIncluded=false;
+//                            intersection.add(perm1);
+                        }
                     }
-//                    for (Action action:perm1ActionList)
-//                    {
-//                        if(!perm2.getActionList().contains(action))
-//                        {
-//                            allActionsIncluded=false;
-////                            intersection.add(perm1);
-//                        }
-//                    }
                     if(allActionsIncluded)
                     {
                         if(!intersection.contains(perm1))
@@ -603,9 +541,9 @@ public class ExecutionOfCPAC {
             }
         }
 
-//        long endTime=System.nanoTime();
-//        long timeDiff = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
-//        methodRunningTimes.put("intersectPermissionLists",timeDiff);
+        Date date2=new Date();
+
+//        System.out.println("Time for intersectPermissionLists() is: "+(date2.getTime()-date.getTime()));
 
         return intersection;
     }

@@ -1,17 +1,16 @@
-package com.nuray.cpacexecution.test;//package com.nuray.cpacexecution;
+package com.nuray.cpacexecution.test;
 
 import com.nuray.cpacexecution.ExecutionOfCPAC;
+import com.nuray.cpacexecution.ExecutionOfCPAC_MERVersion;
 import com.nuray.cpacexecution.cpacmodel.*;
 import com.nuray.cpacexecution.enforcementfunctions.*;
 import com.nuray.cpacexecution.storage.*;
 import com.nuray.gagm.pathfinder.Edge;
-import com.nuray.gagm.pathfinder.Graph;
-import com.nuray.gagm.pathfinder.VARGeneration;
 import com.nuray.gagm.pathfinder.Vertex;
 
 import java.util.*;
 
-public class Test {
+public class MERTest {
 
 
     private static ResourceBase resourceBase;
@@ -102,7 +101,8 @@ public class Test {
         generatePoliciesAndPolicyElements(isSoDViolation,operationalMode);
 
         // 4. call executeCPAC algorithm
-        ExecutionOfCPAC executionOfCPAC=new ExecutionOfCPAC(resourceBase,actionBase,agentBase,policyBase,sodBase);
+        ExecutionOfCPAC_MERVersion executionOfCPAC=new ExecutionOfCPAC_MERVersion(resourceBase,actionBase,
+                                                                                    agentBase,policyBase,sodBase);
 
         Resource resource = resourceBase.getResourceList().get(0);// ==> since there is single resource in my test case
         Agent agent = agentBase.getAgentList().get(0);// ==> since there is single agent in my test case
@@ -111,7 +111,7 @@ public class Test {
 
         // 4.a. generate varList_v_cur (based on generated resource,actions, and agent (and operational mode))
         Queue<Map<Vertex, Queue<Map<Edge, VirtualAccessRequest>>>> varList_v_cur = generateVarListForTest(agent, resource,
-                                                                                                    actions, operationalMode);
+                actions, operationalMode);
         Vertex v_cur=new Vertex(1);
         //        int[] finalStates={3,4};
 //        Queue<Map<Vertex,Queue<Map<Edge, VirtualAccessRequest>>>> varList_v=generateVarListForExperiment(1,1,
@@ -153,8 +153,9 @@ public class Test {
         }
 
 
-        VirtualAccessRequest[] vars = executionOfCPAC.extractVars(varList_v_cur, v_cur);
-        List<Agent> agentList = executionOfCPAC.executeCPAC(null, varList_v_cur, operationalMode, v_cur,v_next,vars);
+
+        List<Agent> agentList = executionOfCPAC.executeCPAC(null, varList_v_cur, operationalMode, v_cur,v_next,null);
+        System.out.print("Size of eligible agent list is: "+agentList.size());
 
 //        // remove published policies
 //        AuthorizationDecision authorizationDecision = executionOfCPAC.getAuthorizationDecision();
@@ -210,15 +211,14 @@ public class Test {
         Agent agent=new Agent("heparinDevice1","physical");
         agentBase.addAgent(agent);
 
-        // 2c. Generate a policy
+        // 2c. Generate a policy and add it to the repository
         Policy policy=generatePolicy(isSoDViolation);
-
-        // 2d. Generate an sod policy
-        SODPolicy sodPolicy=generateSoDPolicy();
-
-        // 3. Add policies to repositories
         policyBase.addPolicy(policy);
+
+        // 2d. Generate an sod policy and add it to the repository
+        SODPolicy sodPolicy=generateSoDPolicy();
         sodBase.addSODPolicy(sodPolicy);
+
     }
 
 
@@ -239,23 +239,32 @@ public class Test {
         agentAttMatchFuncListMap.put("agent group 1",agentAttributes);
 
         // 2c.3. generate environment attributes to be used in the policy rule
-            // will be null for our sample CPAC policy
+        // will be null for our sample CPAC policy
 
         // 2c.4. generate action attributes with their matching functions to be used in the policy rule
         // (Map attributes to their attribute matching functions for XACML evaluation)
-        List<Map<Attribute,String>> actionAttributes=generateActionAttributes(isSodViolation);
+        List<Map<Attribute,String>> actionAttributes=generateActionAttributes(isSodViolation); // there are two actions and two different permissions allowed
         Map<String, List<Map<Attribute, String>>> actionAttMatchFuncListMap=new HashMap<>();
-        actionAttMatchFuncListMap.put("action group 1",actionAttributes);
 
-        // Note that policy effect should start with uppercase letter, otherwise WSO2 identity server throws an error for invalid policy.
-        PolicyRule policyRule=new PolicyRule(resourceAttMatchFuncListMap,agentAttMatchFuncListMap,
-                actionAttMatchFuncListMap,null,
-                "active","sample-CPAC-policy-rule","Permit",
-                resourceBase,actionBase);
+        List<PolicyRule> policyRuleList=new ArrayList<>();
+        for (int i=0;i<actionAttributes.size();i++)
+        {
+            Map<Attribute, String> attributeStringMap = actionAttributes.get(i);
+            List<Map<Attribute,String>> actionAttributeGroup=new ArrayList<>();
+            actionAttributeGroup.add(attributeStringMap);
+            actionAttMatchFuncListMap.put("action group "+(i+1),actionAttributeGroup);
+
+            // Note that policy effect should start with uppercase letter, otherwise WSO2 identity server throws an error for invalid policy.
+            PolicyRule policyRule=new PolicyRule(resourceAttMatchFuncListMap,agentAttMatchFuncListMap,
+                    actionAttMatchFuncListMap,null,
+                    "active","sample-CPAC-policy-rule","Permit",
+                    resourceBase,actionBase);
+
+            policyRuleList.add(policyRule);
+        }
 
         Policy policy=new Policy("sample-CPAC-policy",
-                "urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit",
-                new ArrayList<>(Arrays.asList(new PolicyRule[]{policyRule})));
+                "urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit", policyRuleList);
 
         return policy;
 
@@ -301,7 +310,7 @@ public class Test {
 
         // 2c.5. Map attributes to their attribute matching functions (for XACML evaluation)
 
-            // for resource attributes
+        // for resource attributes
 
         Map<Attribute,String> resourceIDToMatchingFunctionMap=
                 mapAttributesToMatchingFunctions(resourceID,
@@ -339,7 +348,7 @@ public class Test {
         agentID.setAttributeValueCategorical("heparinDevice1");
 
         // 2c.5. Map attributes to their attribute matching functions (for XACML evaluation)
-            // for agent attributes
+        // for agent attributes
 
         Map<Attribute,String> agentIDToMatchingFunctionMap=mapAttributesToMatchingFunctions(agentID,
                 "urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case");
@@ -359,21 +368,31 @@ public class Test {
      */
     private static List<Map<Attribute, String>> generateActionAttributes(boolean isSoDViolation) throws Exception {
         List<Map<Attribute, String>> actionAttToMatchingFunctions=new LinkedList<>();
-        Attribute actionID=new Attribute("actionID",null,"categorical");
+        Attribute actionID1=new Attribute("actionID",null,"categorical");
+        Attribute actionID2=new Attribute("actionID",null,"categorical");
+
 
         if(isSoDViolation)
         {
-            actionID.setAttributeValueCategorical("infuseDrug2");
+            actionID1.setAttributeValueCategorical("infuseDrug2");
+            actionID2.setAttributeValueCategorical("infuseDrug1");
         }
         else
         {
-            actionID.setAttributeValueCategorical("deliverHeparin");
+            actionID1.setAttributeValueCategorical("deliverHeparin");
         }
 
         // Map attributes to their attribute matching functions (for XACML evaluation) for action attributes
-        Map<Attribute,String> actionIDToMatchingFunctionMap=mapAttributesToMatchingFunctions(actionID,
+        Map<Attribute,String> actionIDToMatchingFunctionMap1=mapAttributesToMatchingFunctions(actionID1,
                 "urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case");
-        actionAttToMatchingFunctions.add(actionIDToMatchingFunctionMap);
+        actionAttToMatchingFunctions.add(actionIDToMatchingFunctionMap1);
+
+        if(actionID2.isValueSet())
+        {
+            Map<Attribute,String> actionIDToMatchingFunctionMap2=mapAttributesToMatchingFunctions(actionID2,
+                    "urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case");
+            actionAttToMatchingFunctions.add(actionIDToMatchingFunctionMap2);
+        }
 
         return actionAttToMatchingFunctions;
     }
@@ -390,7 +409,7 @@ public class Test {
 
         SODPolicy sodPolicy=new SODPolicy();
 
-            // find human resources (patients) to be infused a drug
+        // find human resources (patients) to be infused a drug
 
         List<Resource> resourceList = resourceBase.getResourceList();
         List<Resource> humanResList=new LinkedList<>();
@@ -399,7 +418,7 @@ public class Test {
             if(resource.getType().equalsIgnoreCase("human"))
             {
                 if(resource.getResourceID().startsWith("patient"))
-                humanResList.add(resource);
+                    humanResList.add(resource);
             }
         }
 
@@ -518,3 +537,4 @@ public class Test {
 
 
 }
+
